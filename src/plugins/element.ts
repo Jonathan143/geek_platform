@@ -15,7 +15,14 @@ import {
   Tabs,
   TabPane,
   Tag,
-  Table
+  Table,
+  Select,
+  Option,
+  Avatar,
+  Popover,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu
 } from 'element-ui'
 import '../theme/element-variables.scss'
 
@@ -33,6 +40,13 @@ Vue.use(Button)
   .use(TabPane)
   .use(Tag)
   .use(Table)
+  .use(Select)
+  .use(Option)
+  .use(Avatar)
+  .use(Popover)
+  .use(Dropdown)
+  .use(DropdownItem)
+  .use(DropdownMenu)
 
 Vue.prototype.$loading = Loading.service
 Vue.prototype.$msgbox = MessageBox
