@@ -14,3 +14,6 @@ export default class Login extends Vue {
   mounted() {}
 }
 </script>
+
+<style lang="scss">
+</style>

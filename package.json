@@ -1,5 +1,5 @@
 {
-  "name": "okr",
+  "name": "geek_platform",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -17,6 +17,7 @@
     "vue-class-component": "^7.0.2",
     "vue-property-decorator": "^8.1.0",
     "vue-router": "^3.0.3",
+    "vuetify": "^2.0.3",
     "vuex": "^3.0.1",
     "vuex-class": "^0.3.2"
   },
@@ -34,6 +35,7 @@
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "node-sass": "^4.9.0",
+    "sass": "^1.22.9",
     "sass-loader": "^7.1.0",
     "typescript": "^3.4.3",
     "vue-cli-plugin-element": "^1.0.1",
