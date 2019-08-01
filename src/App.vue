@@ -14,13 +14,13 @@ export default class App extends Vue {}
 <style>
 #app {
   color: #545454;
-  font-size: 12px;
+  font-size: 14px;
   font-family: 'pingFangSC-Bold';
 }
 @font-face {
   font-family: 'pingFangSC-Bold';
-  /* src: url('https://static.weixiaotong.com.cn/static/icon/appstore/PingFang Bold.ttf'); */
-  src: url('./theme/PingFang Bold.ttf');
+  src: url('https://static.weixiaotong.com.cn/static/icon/appstore/PingFang Bold.ttf');
+  /* src: url('./theme/PingFang Bold.ttf'); */
   font-weight: normal;
   font-style: normal;
 }

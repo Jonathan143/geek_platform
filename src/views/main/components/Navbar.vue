@@ -28,7 +28,7 @@
 
     <div class="toolbar__user">
       <el-avatar size="medium"
-        src="https://vuetifyjs.com/apple-touch-icon-180x180.png"></el-avatar>
+        src="https://img-1256555015.file.myqcloud.com/2019/05/14/5cda6fee81066.jpg"></el-avatar>
 
       <el-dropdown class="user__menu">
         <div class="menu__label">
@@ -91,7 +91,7 @@ export default class Navbar extends Vue {
     }
   }
   &__aims {
-    min-width: 360px;
+    min-width: 320px;
     height: 66px;
     display: flex;
     align-items: center;
@@ -104,6 +104,9 @@ export default class Navbar extends Vue {
       &__label {
         color: $--color-text-primary;
         font-size: 14px;
+      }
+      &__select {
+        width: 160px;
       }
     }
   }
