@@ -85,7 +85,7 @@ const disposeParam = (method: string, param: any) => {
     case 'get':
       return { params: param }
     case 'post':
-      return qs.stringify(param)
+      return { data: qs.stringify(param) }
   }
   return param
 }
@@ -105,12 +105,14 @@ const callApi = ({
       return Promise.resolve(data.data)
     })
     .catch(error => {
-      printError({ method, api, param, config, error })
+      if (!noNotify) {
+        printError({ method, api, param, config, error })
 
-      const message = error.response.data || error
-      console.log(message)
+        const message = error.response.data || error
+        console.log(message)
 
-      errorHandle(message)
+        errorHandle(message)
+      }
       return Promise.reject(error.message)
     })
 }
