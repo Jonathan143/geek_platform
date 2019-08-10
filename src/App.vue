@@ -1,29 +1,44 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
+    <transition name="el-fade-in-linear">
+      <router-view />
+    </transition>
   </div>
 </template>
 
 <style lang="scss">
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+* {
+  padding: 0;
+  margin: 0;
 }
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+
+ul {
+  list-style: none;
+}
+html,
+body,
+#app {
+  height: 100%;
+  color: #545454;
+  font-size: 14px;
+  font-family: 'pingFangSC-Bold';
+}
+@font-face {
+  font-family: 'pingFangSC-Bold';
+  src: url('https://static.weixiaotong.com.cn/static/icon/appstore/PingFang Bold.ttf');
+  /* src: url('./theme/PingFang Bold.ttf'); */
+  font-weight: normal;
+  font-style: normal;
+}
+::-webkit-scrollbar-thumb {
+  background-color: hsla(223, 3%, 50%, 0.4);
+}
+::-webkit-scrollbar-thumb:active {
+  background-color: hsla(223, 3%, 50%, 0.6);
+}
+::-webkit-scrollbar {
+  border: none;
+  width: 6px;
+  height: 6px;
 }
 </style>
