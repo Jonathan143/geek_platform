@@ -1,9 +1,16 @@
 // vue.config.js
+const webpack = require('webpack')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin
+
+const isDevelopment = process.env.NODE_ENV !== 'production'
+const isAnalyzer = process.env.npm_lifecycle_event === 'analyzer'
+
 module.exports = {
   // 选项...
   // 当使用基于 HTML5 history.pushState 的路由时；
   // 当使用 pages 选项构建多页面应用时。
-  publicPath: '/',
+  publicPath: isDevelopment ? '/' : '',
   // 当运行 vue-cli-service build 时生成的生产环境构建文件的目录。注意目标目录在构建之前会被清除 (构建时传入 --no-clean 可关闭该行为)。
   outputDir: 'dist',
   // 放置生成的静态资源 (js、css、img、fonts) 的 (相对于 outputDir 的) 目录。
@@ -28,14 +35,35 @@ module.exports = {
   integrity: false,
   // 反向代理
   devServer: {
-    // devServer: {
-    //     proxy: {
-    //       '/api': {
-    //         target: '1',
-    //         ws: true,
-    //         changeOrigin: true
-    //       }
-    //     }
-    // }
+    compress: true,
+    port: 8666
+  },
+  configureWebpack: config => {
+    const customConfig = {
+      //警告 webpack 的性能提示
+      performance: {
+        hints: 'warning',
+        //入口起点的最大体积
+        maxEntrypointSize: 50000000,
+        //生成文件的最大体积
+        maxAssetSize: 30000000,
+        //只给出 js 文件的性能提示
+        assetFilter: function(assetFilename) {
+          return assetFilename.endsWith('.js')
+        }
+      },
+      plugins: [
+        new webpack.BannerPlugin({
+          banner: `Builder: ljw1412\nBuild time: ${new Date()}`
+        }),
+        new webpack.ProvidePlugin({
+          moment: 'moment',
+          Cookies: 'js-cookie'
+        }),
+        new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /zh-cn/)
+      ]
+    }
+    if (isAnalyzer) customConfig.plugins.push(new BundleAnalyzerPlugin())
+    return customConfig
   }
 }

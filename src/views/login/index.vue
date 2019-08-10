@@ -5,7 +5,8 @@
     </div>
     <div class="login__logo">
       <el-avatar :size="120"
-        src="https://img-1256555015.file.myqcloud.com/2019/08/06/5d49915f5f6b5.png"></el-avatar>
+        src="https://img-1256555015.file.myqcloud.com/2019/08/06/5d49915f5f6b5.png"
+        @click.native="login"></el-avatar>
       <!-- <el-avatar :size="120"
         src="https://img-1256555015.file.myqcloud.com/2019/08/06/5d49915f65107.png"></el-avatar> -->
     </div>
@@ -14,20 +15,43 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import Vuetify from 'vuetify/lib'
 
 @Component({
   components: {}
 })
 export default class Login extends Vue {
-  mounted() {
+  valid: Boolean = true
+  name: String = ''
+  nameRules = [
+    (v: String) => !!v || 'Name is required',
+    (v: String) =>
+      (v && v.length <= 10) || 'Name must be less than 10 characters'
+  ]
+  email: String = ''
+  emailRules = [
+    (v: String) => !!v || 'E-mail is required',
+    (v: any) => /.+@.+\..+/.test(v) || 'E-mail must be valid'
+  ]
+
+  login() {
     this.$callApi({
-      api: 'file',
-      // method: 'post',
-      param: { path: '/' }
+      api: 'user/login',
+      method: 'post',
+      param: { username: 'ad' }
     }).then((data: any) => {
-      // Cookies.set('token', data.token, { expires: 3 })
+      Cookies.set('token', data.token, { expires: 3 })
     })
   }
+
+  validate(): void {
+    const el: any = this.$refs.form
+    if (el.validate()) {
+      // this.snackbar = true
+    }
+  }
+
+  mounted() {}
 }
 </script>
 
@@ -49,6 +73,8 @@ export default class Login extends Vue {
     z-index: 1;
     position: relative;
     overflow: hidden;
+    box-sizing: border-box;
+    padding-top: 100px;
     &::after {
       content: '';
       position: absolute;
@@ -64,12 +90,10 @@ export default class Login extends Vue {
       border-radius: 9px;
       margin: -30px;
     }
-    .card {
-    }
   }
   &__logo {
     position: absolute;
-    top: calc(100% - 800px);
+    top: calc(100% - 780px);
     left: 50%;
     z-index: 1;
     transform: translateX(-50%);

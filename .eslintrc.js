@@ -14,5 +14,10 @@ module.exports = {
   },
   parserOptions: {
     parser: '@typescript-eslint/parser'
+  },
+  globals: {
+    moment: true,
+    Store: true,
+    Cookies: true
   }
 }

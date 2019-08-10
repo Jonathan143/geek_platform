@@ -102,7 +102,7 @@ const callApi = ({
   Object.assign(config, { url: api, method }, mParam)
   return instance(config)
     .then(data => {
-      return Promise.resolve(data.data)
+      return Promise.resolve(data.data.data)
     })
     .catch(error => {
       if (!noNotify) {
