@@ -3,7 +3,9 @@
     <platform-navbar></platform-navbar>
     <platform-header></platform-header>
     <main :class="`sidebar--${isMenuCollapsed?'fold':'unfold'}`">
-      <router-view></router-view>
+      <transition name="el-fade-in-linear">
+        <router-view></router-view>
+      </transition>
     </main>
   </div>
 </template>

@@ -1,6 +1,7 @@
 <template>
   <div class="profile-info">
-    <el-dropdown class="profile-info__menu">
+    <el-dropdown class="profile-info__menu"
+      @command="handleCommand">
       <div class="menu__label">
         <el-avatar size="medium"
           src="https://img-1256555015.file.myqcloud.com/2019/05/14/5cda6fee81066.jpg"></el-avatar>
@@ -8,8 +9,8 @@
         <i class="el-icon-arrow-down"></i>
       </div>
       <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item><i class="el-icon-user"></i> 个人中心</el-dropdown-item>
-        <el-dropdown-item><i class="el-icon-switch-button"></i> 退出登录</el-dropdown-item>
+        <el-dropdown-item command="personal"><i class="el-icon-user"></i> 个人中心</el-dropdown-item>
+        <el-dropdown-item command="logout"><i class="el-icon-switch-button"></i> 退出登录</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
   </div>
@@ -29,7 +30,23 @@ export default {
       username: state => state.nickname || state.username
     })
   },
-  methods: {},
+  methods: {
+    handleCommand(command) {
+      switch (command) {
+        case 'personal':
+          console.log('personal')
+          break
+        case 'logout':
+          Store.clearAll()
+          Cookies.remove('token')
+          this.$router.replace({ name: 'login' })
+          break
+
+        default:
+          break
+      }
+    }
+  },
   mounted() {}
 }
 </script>

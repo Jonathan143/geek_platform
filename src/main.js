@@ -2,14 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import Store from 'store'
-import expirePlugin from 'store/plugins/expire'
-import callApi from './api'
-import './plugins/element'
-
-Vue.prototype.$callApi = callApi
-Store.addPlugin(expirePlugin)
-window.Store = Store
+import './plugins/inject'
 
 Vue.config.productionTip = false
 
