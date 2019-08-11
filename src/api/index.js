@@ -46,13 +46,15 @@ const callApi = ({
   }
   const mParam = disposeParam(method, param)
   return $[method](api, mParam)
-    .then(data => {
+    .then(({ data }) => {
       return Promise.resolve(data.data)
     })
     .catch(error => {
       printError({ method, api, param, config, error })
       error =
-        (error.response && error.response.data && error.response.data.error) ||
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
         error.message
       if (error.includes('Network Error')) {
         error = '服务器异常! /(ㄒoㄒ)/~~'
