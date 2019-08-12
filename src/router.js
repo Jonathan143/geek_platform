@@ -31,6 +31,12 @@ export default new Router({
           name: 'mzitu',
           component: () =>
             import(/* webpackChunkName: "mzitu" */ './views/main/mzitu')
+        },
+        {
+          path: 'file',
+          name: 'file',
+          component: () =>
+            import(/* webpackChunkName: "file" */ './views/main/file')
         }
       ]
     }

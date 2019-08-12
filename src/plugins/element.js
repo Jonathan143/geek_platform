@@ -37,7 +37,9 @@ import {
   Container,
   Header,
   Main,
-  Aside
+  Aside,
+  Breadcrumb,
+  BreadcrumbItem
 } from 'element-ui'
 import '../theme/element-variables.scss'
 
@@ -77,6 +79,8 @@ Vue.use(Button)
   .use(Header)
   .use(Main)
   .use(Aside)
+  .use(Breadcrumb)
+  .use(BreadcrumbItem)
 
 Vue.prototype.$loading = Loading.service
 Vue.prototype.$msgbox = MessageBox
