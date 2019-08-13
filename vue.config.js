@@ -28,7 +28,7 @@ module.exports = {
       },
       plugins: [
         new webpack.BannerPlugin({
-          banner: `Builder: ljw1412\nBuild time: ${new Date()}`
+          banner: `Builder: Jonathan143\nBuild time: ${new Date()}`
         }),
         new webpack.ProvidePlugin({
           moment: 'moment',

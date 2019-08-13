@@ -5,6 +5,7 @@
     <el-table ref="cloudListTable"
       v-if="!isGrid"
       :data="list"
+      :height="tableHeight"
       :header-cell-style="{'background-color':'#F4F5F9',color:'#000',padding:'5px 0',height:'45px'}"
       @selection-change="onSelectionChange"
       @sort-change="onSortChange">
@@ -109,7 +110,7 @@
             <div class="grid__file-icon"
               :style="{'background-image':`url(${getFileIcon(item)})`}">
             </div>
-            <div class="grid__file-name">{{`${handleFileName(item)}`}}</div>
+            <div class="grid__file-name">{{item.name}}</div>
           </div>
           <el-checkbox v-model="item.isChecked"
             class="grid__file-checkbox"
@@ -121,8 +122,8 @@
 </template>
 
 <script>
-import moment from 'moment'
 import { formatFileSize } from '@/utils/file'
+import { mapState } from 'vuex'
 export default {
   name: 'cloudFileList',
 
@@ -167,11 +168,16 @@ export default {
       isAllGridChecked: false,
       isLoaded: true,
       selectedList: [],
-      userid: Store.get('user').id
+      userid: Store.get('user').id,
+
+      tableHeight: 0
     }
   },
 
   computed: {
+    ...mapState('layout', {
+      bodyHeight: state => state.bodyHeight
+    }),
     gridSelectedList() {
       return this.list.filter(item => item.isChecked)
     },
@@ -182,23 +188,6 @@ export default {
   },
 
   methods: {
-    handleFileName(fileItem, fileLength) {
-      fileLength = fileLength || 13
-      let fileName = fileItem.name
-      let length = fileName.length
-      let currentFileNameLength = fileLength - 5
-      if (length > fileLength) {
-        let dotIndex = fileName.lastIndexOf('.')
-
-        if (dotIndex !== -1 && fileItem.type === 'file') {
-          return `${fileName.substring(0, currentFileNameLength)}...
-                  ${fileName.substr(dotIndex, length)}`
-        }
-        // file folder name
-        return `${fileName.substring(0, currentFileNameLength)}...`
-      }
-      return fileName
-    },
     formatDate(...data) {
       return moment(data[2]).format('YYYY-MM-DD HH:mm')
     },
@@ -325,6 +314,15 @@ export default {
       console.log(item, isChecked)
 
       this.$emit('selectionChange', this.gridSelectedList)
+    },
+
+    setCloudListTableHeight() {
+      setTimeout(() => {
+        this.$nextTick(() => {
+          this.tableHeight =
+            this.bodyHeight - this.$refs.cloudListTable.$el.offsetTop - 20
+        })
+      }, 300)
     }
   },
 
@@ -349,13 +347,16 @@ export default {
       this.isAllGridChecked =
         val.length === this.list.length && this.list.length !== 0
     }
+  },
+
+  mounted() {
+    if (!this.isGrid) this.setCloudListTableHeight()
   }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '@/theme/index.scss';
-$action-color: #4a90e2;
 
 .cloud-list {
   min-width: 1000px;
@@ -367,13 +368,14 @@ $action-color: #4a90e2;
   &__permission,
   &__action {
     cursor: pointer;
-    color: $action-color;
+    color: $--color-primary;
   }
   &__file-name {
-    white-space: nowrap;
-    display: inline-block;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    // white-space: nowrap;
+    // display: inline-block;
+    // overflow: hidden;
+    // text-overflow: ellipsis;
+    @include test_multiEllipsis;
   }
   &__member-count {
     &::after {
@@ -430,10 +432,10 @@ $action-color: #4a90e2;
     cursor: pointer;
     padding: 10px;
     flex-shrink: 0;
-    width: 80px;
+    width: 100px;
+    border-radius: 5px;
     &:hover {
       background-color: rgba(229, 233, 242, 0.6);
-      border-radius: 5px;
     }
     &-wrapper {
       position: relative;
@@ -452,6 +454,7 @@ $action-color: #4a90e2;
       font-weight: 400;
       color: rgba(51, 51, 51, 1);
       line-height: 21px;
+      @include test_multiEllipsis;
     }
     &-checkbox {
       position: absolute;

@@ -39,9 +39,11 @@ import {
   Main,
   Aside,
   Breadcrumb,
-  BreadcrumbItem
+  BreadcrumbItem,
+  Checkbox
 } from 'element-ui'
 import '../theme/element-variables.scss'
+import 'element-ui/lib/theme-chalk/base.css'
 
 Vue.use(Button)
   .use(Loading.directive)
@@ -81,6 +83,7 @@ Vue.use(Button)
   .use(Aside)
   .use(Breadcrumb)
   .use(BreadcrumbItem)
+  .use(Checkbox)
 
 Vue.prototype.$loading = Loading.service
 Vue.prototype.$msgbox = MessageBox

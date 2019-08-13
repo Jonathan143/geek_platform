@@ -47,7 +47,14 @@ const callApi = ({
   const mParam = disposeParam(method, param)
   return $[method](api, mParam)
     .then(({ data }) => {
-      return Promise.resolve(data.data)
+      if (data.message === 'success') {
+        return Promise.resolve(data.data)
+      } else {
+        vue.$notify.error({
+          title: '错误',
+          message: data.message || data.error
+        })
+      }
     })
     .catch(error => {
       printError({ method, api, param, config, error })

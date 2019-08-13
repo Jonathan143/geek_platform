@@ -158,10 +158,12 @@ export default {
       })
     },
     setMzituTableHeight() {
-      this.$nextTick(() => {
-        this.tableHeight =
-          this.bodyHeight - this.$refs.mzituTable.$el.offsetTop - 20
-      })
+      setTimeout(() => {
+        this.$nextTick(() => {
+          this.tableHeight =
+            this.bodyHeight - this.$refs.mzituTable.$el.offsetTop - 20
+        })
+      }, 300)
     }
   },
   mounted() {
