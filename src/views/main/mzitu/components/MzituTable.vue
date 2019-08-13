@@ -22,8 +22,9 @@
     </div>
 
     <el-table :data="tabeData"
+      ref="mzituTable"
       stripe
-      height="600"
+      :height="tableHeight"
       :header-cell-style="{background: '#f5f7fa'}"
       :default-sort="{prop: 'date', order: 'descending'}"
       style="width: 100%">
@@ -68,6 +69,7 @@
 
 <script>
 import DialogImage from '@/components/DialogImage'
+import { mapState } from 'vuex'
 export default {
   components: { DialogImage },
   props: {},
@@ -82,10 +84,15 @@ export default {
         title: '',
         urlList: []
       },
-      isDownloading: false
+      isDownloading: false,
+      tableHeight: 0
     }
   },
-  computed: {},
+  computed: {
+    ...mapState('layout', {
+      bodyHeight: state => state.bodyHeight
+    })
+  },
   watch: {
     category() {
       this.reFindTabeData()
@@ -128,11 +135,15 @@ export default {
         method: 'post',
         api: 'mzitu/download',
         param: { urls, name }
-      }).then(data => {
-        this.isDialogImage.urlList = data
-        this.isDialogImage.visible = true
-        this.isDownloading = false
       })
+        .then(data => {
+          this.isDialogImage.urlList = data
+          this.isDialogImage.visible = true
+          this.isDownloading = false
+        })
+        .catch(() => {
+          this.isDownloading = false
+        })
     },
 
     reFindTabeData() {
@@ -145,11 +156,18 @@ export default {
       }).then(data => {
         this.tabeData = data
       })
+    },
+    setMzituTableHeight() {
+      this.$nextTick(() => {
+        this.tableHeight =
+          this.bodyHeight - this.$refs.mzituTable.$el.offsetTop - 20
+      })
     }
   },
   mounted() {
     this.reFindCategoryList()
     this.reFindTabeData()
+    this.setMzituTableHeight()
   }
 }
 </script>

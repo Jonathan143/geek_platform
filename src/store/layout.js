@@ -7,7 +7,8 @@ const defaultState = () => {
   return {
     isMenuCollapsed: true,
     isBack: false,
-    title: ''
+    title: '',
+    bodyHeight: document.body.clientHeight
   }
 }
 
