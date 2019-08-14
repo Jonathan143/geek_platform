@@ -1,4 +1,4 @@
-#! /bin/upload
+#! /bin/bash
 cur_dateTime="`date +%Y-%m-%d_%H:%m:%s`"  
 echo "开始打包 $cur_dateTime"
 echo '正在更新依赖...'
