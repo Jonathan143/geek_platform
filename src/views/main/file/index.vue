@@ -73,7 +73,7 @@ export default {
 @import '@/theme/index.scss';
 .file {
   &__breadcrumb {
-    font-size: 16px;
+    font-size: 14px;
     line-height: 22px;
     padding-bottom: 10px;
   }

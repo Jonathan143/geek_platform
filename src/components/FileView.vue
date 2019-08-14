@@ -80,7 +80,8 @@
         width="180"></el-table-column>
       <el-table-column v-if="!noAction"
         label="操作"
-        align="center">
+        align="center"
+        width="180">
         <div class="cloud-list__action"
           slot-scope="scope">
           <span v-if="isCloudAdmin || scope.row.isAdmin || isAdmin || scope.row.uploaderid === userid"
@@ -231,8 +232,7 @@ export default {
         if (ext) {
           // 先检查是不是图片，在缩略图模式下图片显示预览图
           if (imageExtList.includes(ext.toLowerCase())) {
-            let baseImgICon =
-              'https://static.weixiaotong.com.cn/static/icon/pcmain/icon-image.svg'
+            let baseImgICon = `${imageHost}/icon-image.svg`
             return this.isGrid ? item.url || baseImgICon : baseImgICon
           }
           for (let key in fileIconMap) {
@@ -317,12 +317,7 @@ export default {
     },
 
     setCloudListTableHeight() {
-      setTimeout(() => {
-        this.$nextTick(() => {
-          this.tableHeight =
-            this.bodyHeight - this.$refs.cloudListTable.$el.offsetTop - 20
-        })
-      }, 300)
+      this.tableHeight = this.bodyHeight - 140
     }
   },
 
@@ -349,7 +344,7 @@ export default {
     }
   },
 
-  mounted() {
+  created() {
     if (!this.isGrid) this.setCloudListTableHeight()
   }
 }
@@ -371,10 +366,6 @@ export default {
     color: $--color-primary;
   }
   &__file-name {
-    // white-space: nowrap;
-    // display: inline-block;
-    // overflow: hidden;
-    // text-overflow: ellipsis;
     @include test_multiEllipsis;
   }
   &__member-count {

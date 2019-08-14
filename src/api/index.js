@@ -38,7 +38,7 @@ let baseURL = ''
 if (process.env.NODE_ENV === 'development') {
   baseURL = 'http://localhost:3200/'
 } else if (process.env.NODE_ENV === 'production') {
-  baseURL = 'https://api.yang143.cn/'
+  baseURL = 'https://api.yang143.cn/geek/'
 }
 const instance = {
   timeout: 1000 * 12,

@@ -44,6 +44,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/theme/index.scss';
 header {
   position: fixed;
   top: 0;
@@ -52,7 +53,11 @@ header {
   display: flex;
   height: 56px;
   color: #fff;
-  background-color: #545c64;
+  background: linear-gradient(
+    270deg,
+    $--banner-begin-background,
+    $--banner-end-background
+  );
   align-items: center;
   justify-content: space-between;
   transition: width 0.3s ease-in-out;
