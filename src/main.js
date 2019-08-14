@@ -16,7 +16,3 @@ router.beforeResolve((to, from, next) => {
   store.dispatch('user/syncUser')
   next()
 })
-
-router.afterEach((to, from) => {
-  if (!Cookies.get('token')) router.replace({ name: 'login' })
-})

@@ -1,36 +1,54 @@
-import Vue from 'vue'
+/**
+ * axios封装
+ * 请求拦截、响应拦截、错误统一处理
+ */
+import { Notification } from 'element-ui'
 import axios from 'axios'
-import url from 'url'
-import qs from 'qs'
-const vue = new Vue()
+import router from '../router'
+// import qs from 'qs' // 根据需求导入qs模块
 
-const methodList = ['get', 'post', 'put', 'patch', 'options', 'head', 'delete']
+/**
+ * 跳转登录页
+ * 携带当前页面路由，以期在登录页面完成登录后返回当前页面
+ */
+const toLogin = () => {
+  Store.clearAll()
+  Cookies.remove('token')
+  router.replace({
+    name: 'login',
+    query: {
+      redirect: router.currentRoute.fullPath
+    }
+  })
+}
 
-const locationUrl = url.parse(window.location.origin)
-const base = locationUrl.protocol + '//' + locationUrl.hostname
-
-console.log(process.env)
-
-axios.defaults.baseURL = `${base}:3200/`
-axios.defaults.headers.post['Content-Type'] =
-  'application/x-www-form-urlencoded; charset=UTF-8'
-axios.defaults.timeout = 20000
-axios.defaults.withCredentials = true
-
-function printError({ method, api, param, config, error }) {
+/**
+ * 请求失败控制台log
+ */
+const printError = ({ method, api, param, config, error }) => {
   console.error(`${method.toUpperCase()} ["${api}"] 调用失败: ${error.message}`)
   console.log(JSON.stringify({ api, param, config }, null, 2))
 }
 
-// dispose request parameters
-function disposeParam(method, param) {
-  switch (method) {
-    case 'get':
-      return { params: param }
-    case 'post':
-      return qs.stringify(param)
+/**
+ * 创建axios实例
+ * 设置post请求头
+ */
+let baseURL = ''
+if (process.env.NODE_ENV === 'development') {
+  baseURL = 'http://localhost:3200/'
+} else if (process.env.NODE_ENV === 'production') {
+  baseURL = 'https://api.yang143.cn/'
+}
+const instance = {
+  timeout: 1000 * 12,
+  baseURL: baseURL,
+  withCredentials: true,
+  headers: {
+    post: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
   }
-  return param
 }
 
 const callApi = ({
@@ -40,36 +58,36 @@ const callApi = ({
   config = {},
   noNotify = false
 } = {}) => {
-  const $ = axios.create(config)
-  if (!methodList.includes(method.toLowerCase())) {
-    method = methodList[0]
-  }
-  const mParam = disposeParam(method, param)
-  return $[method](api, mParam)
+  const $ = axios.create(Object.assign(instance, config))
+
+  return $[method](api, method === 'post' ? param : { params: param })
     .then(({ data }) => {
       if (data.message === 'success') {
         return Promise.resolve(data.data)
       } else {
-        vue.$notify.error({
-          title: '错误',
-          message: data.message || data.error
-        })
+        return Promise.reject(data)
       }
     })
     .catch(error => {
+      if (error.response) {
+        const { status } = error.response
+        if (status === 401 || status === 403) {
+          toLogin()
+        }
+      }
       printError({ method, api, param, config, error })
-      error =
+      let message =
         (error.response &&
           error.response.data &&
           error.response.data.message) ||
         error.message
-      if (error.includes('Network Error')) {
-        error = '服务器异常! /(ㄒoㄒ)/~~'
+      if (message.includes('Network Error')) {
+        message = '服务器异常! /(ㄒoㄒ)/~~'
       }
       if (!noNotify) {
-        vue.$notify.error({
+        Notification.error({
           title: '错误',
-          message: error
+          message
         })
       }
       return Promise.reject(error)

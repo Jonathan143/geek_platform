@@ -112,7 +112,7 @@ export default {
           url: row.url
         }
       }).then(data => {
-        this.reSaveDownload(data.srcList.join(','), row.name)
+        this.reSaveDownload(data.srcList, row.name)
       })
     },
 

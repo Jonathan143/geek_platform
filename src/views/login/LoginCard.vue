@@ -64,7 +64,11 @@ export default {
         }
       }).then(data => {
         Store.set('user', data, new Date().getTime() + 3 * 24 * 60 * 60 * 1000)
-        Cookies.set('token', data.token, { expires: 3 })
+        const config = { expires: 3 }
+        process.env.NODE_ENV === 'production'
+          ? Object.assign(config, { domain: 'api.yang143.cn' })
+          : ''
+        Cookies.set('token', data.token, config)
         this.$router.replace({ name: 'main' })
       })
     },
