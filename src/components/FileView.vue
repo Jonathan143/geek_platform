@@ -68,9 +68,9 @@
           {{formatSize(scope.row.size)}}
         </template>
       </el-table-column>
-      <el-table-column v-if="!isZone && !noUploader"
-        label="上传人"
-        prop="uploader"
+      <el-table-column v-if="!isZone"
+        label="所有者"
+        prop="owner"
         align="center"
         width="180"></el-table-column>
       <el-table-column v-if="isDeleteInfo"
