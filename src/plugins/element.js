@@ -40,7 +40,8 @@ import {
   Aside,
   Breadcrumb,
   BreadcrumbItem,
-  Checkbox
+  Checkbox,
+  InfiniteScroll
 } from 'element-ui'
 import '../theme/element-variables.scss'
 import 'element-ui/lib/theme-chalk/base.css'
@@ -84,6 +85,7 @@ Vue.use(Button)
   .use(Breadcrumb)
   .use(BreadcrumbItem)
   .use(Checkbox)
+  .use(InfiniteScroll)
 
 Vue.prototype.$loading = Loading.service
 Vue.prototype.$msgbox = MessageBox

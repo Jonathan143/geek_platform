@@ -11,6 +11,7 @@
       sortable
       no-uploader
       is-admin
+      no-action
       @fileClick="onFileClick"></file-view>
   </div>
 </template>

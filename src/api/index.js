@@ -14,10 +14,12 @@ import router from '../router'
 const toLogin = () => {
   Store.clearAll()
   Cookies.remove('token')
+  const { name, fullPath } = router.currentRoute
+  if (name === 'login') return
   router.replace({
     name: 'login',
     query: {
-      redirect: router.currentRoute.fullPath
+      redirect: fullPath
     }
   })
 }
@@ -58,6 +60,7 @@ const callApi = ({
   config = {},
   noNotify = false
 } = {}) => {
+  if (noNotify && !config.timeout) config['timeout'] = 1000 * 120
   const $ = axios.create(Object.assign(instance, config))
 
   return $[method](api, method === 'post' ? param : { params: param })

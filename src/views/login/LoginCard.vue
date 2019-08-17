@@ -69,7 +69,10 @@ export default {
           ? Object.assign(config, { domain: '.yang143.cn' })
           : ''
         Cookies.set('token', data.token, config)
-        this.$router.replace({ name: 'main' })
+        const { redirect } = this.$route.query
+        redirect
+          ? this.$router.push(redirect)
+          : this.$router.replace({ name: 'main' })
       })
     },
 

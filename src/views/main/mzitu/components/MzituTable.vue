@@ -112,7 +112,7 @@ export default {
           url: row.url
         }
       }).then(data => {
-        this.reSaveDownload(data.srcList, row.name)
+        this.reSaveDownload(data.srcList, row.name, row.date)
       })
     },
 
@@ -130,11 +130,11 @@ export default {
       })
     },
 
-    reSaveDownload(urls, name) {
+    reSaveDownload(urls, name, date) {
       this.$callApi({
         method: 'post',
         api: 'mzitu/download',
-        param: { urls, name }
+        param: { urls, name, date }
       })
         .then(data => {
           this.isDialogImage.urlList = data

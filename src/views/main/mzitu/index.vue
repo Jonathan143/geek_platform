@@ -1,13 +1,16 @@
 <template>
   <div>
-    <mzitu-table></mzitu-table>
+    <mzitu-card-view></mzitu-card-view>
+    <!-- <mzitu-table></mzitu-table> -->
   </div>
 </template>
 
 <script>
-import MzituTable from './components/MzituTable'
 export default {
-  components: { MzituTable },
+  components: {
+    MzituTable: () => import('./components/MzituTable'),
+    MzituCardView: () => import('./components/MzituCardView')
+  },
   props: {},
   data() {
     return {}

@@ -72,7 +72,7 @@
         label="所有者"
         prop="owner"
         align="center"
-        width="180"></el-table-column>
+        width="80"></el-table-column>
       <el-table-column v-if="isDeleteInfo"
         label="已删除"
         prop="deleteDay"
