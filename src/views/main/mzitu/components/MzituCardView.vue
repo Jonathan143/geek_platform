@@ -1,8 +1,7 @@
 <template>
   <layout mode="table">
     <template #header>
-      <el-select class="action-row__component"
-        v-model="currentCategory"
+      <el-select v-model="currentCategory"
         @change="onCategoryChange"
         placeholder="请选择分类">
         <el-option v-for="category in categoryList"
@@ -11,16 +10,18 @@
           :value="category.value">
         </el-option>
       </el-select>
-      <el-input class="action-row__component"
-        placeholder="搜索妹子"
+      <el-input placeholder="搜索妹子"
         prefix-icon="el-icon-search"
         v-model="searchMzitu"
         clearable
-        @keydown.enter.native="reFindMzitu">
+        @keydown.enter.native="initReData">
       </el-input>
     </template>
 
-    <div class="card-mzitu">
+    <div class="card-mzitu"
+      v-infinite-scroll="onMoreLoad"
+      infinite-scroll-distance="360"
+      :infinite-scroll-disabled="infiniteDisabled">
       <el-card class="card-mzitu__content"
         v-for="(mzitu,index) in mzituList"
         :key="index"
@@ -49,6 +50,7 @@
           @click="onGetAllPicClick(mzitu)"></el-button>
       </el-card>
     </div>
+    <el-divider><i :class="loadIconClass"></i></el-divider>
   </layout>
 </template>
 
@@ -69,19 +71,41 @@ export default {
         title: '',
         urlList: []
       },
-      isLoading: false
+      isLoading: false,
+      page: {
+        index: 1,
+        total: 0
+      }
     }
   },
-  computed: {},
+  computed: {
+    noMore() {
+      return this.page.total >= 200
+    },
+    infiniteDisabled() {
+      return this.isLoading || this.noMore
+    },
+    loadIconClass() {
+      return this.noMore ? 'el-icon-finished' : 'el-icon-loading'
+    }
+  },
   methods: {
+    onMoreLoad() {
+      this.reFindMzitu(true)
+    },
+
     onCategoryChange() {
       this.searchMzitu = ''
+      this.initReData()
+    },
+
+    initReData() {
+      this.page.index = 0
       this.reFindMzitu()
     },
 
     onGetAllPicClick(mzitu) {
       this.isDownloading = true
-      // this.isDialogImage.title = row.name
       this.$callApi({
         api: 'mzitu/picurl',
         param: {
@@ -102,12 +126,9 @@ export default {
       })
         .then(data => {
           this.$message.success('下载成功')
-          // this.isDialogImage.urlList = data
-          // this.isDialogImage.visible = true
-          // this.isDownloading = false
         })
         .catch(() => {
-          // this.isDownloading = false
+          this.$message.error('下载失败咯')
         })
     },
 
@@ -119,37 +140,48 @@ export default {
         this.categoryList = data
       })
     },
-    reFindMzitu() {
+
+    reFindMzitu(infinite = false) {
+      this.isLoading = true
       this.$callApi({
         api: 'mzitu',
         param: {
           type: this.currentCategory,
-          content: this.searchMzitu
+          content: this.searchMzitu,
+          page: this.page.index
         },
         noNotify: true
       }).then(data => {
-        this.mzituList = data
+        this.isLoading = false
+        this.mzituList = infinite ? [...this.mzituList, ...data] : data
+        if (infinite) {
+          this.page.index++
+          this.page.total = this.mzituList.length
+        }
       })
     }
   },
+
   mounted() {
     this.reFindCategoryList()
-    this.reFindMzitu()
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import '@/theme/index.scss';
+
 .card-mzitu {
-  display: grid;
-  grid-template-columns: repeat(5, auto);
-  grid-template-rows: repeat(5, auto);
-  grid-row-gap: 20px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   justify-content: space-evenly;
   &__content {
     width: 236px;
     position: relative;
     cursor: pointer;
+    height: 354px;
+    margin-bottom: 20px;
     &:hover {
       .content {
         opacity: 1;
@@ -182,30 +214,8 @@ export default {
     right: 6px;
   }
 }
-
-@media screen and (max-width: 1700px) {
-  .card-mzitu {
-    grid-template-columns: repeat(4, auto);
-    grid-template-rows: repeat(4, auto);
-  }
-}
-
-@media screen and (max-width: 1400px) {
-  .card-mzitu {
-    grid-template-columns: repeat(3, auto);
-    grid-template-rows: repeat(3, auto);
-  }
-}
-@media screen and (max-width: 992px) {
-  .card-mzitu {
-    grid-template-columns: repeat(2, auto);
-    grid-template-rows: repeat(2, auto);
-  }
-}
-@media screen and (max-width: 768px) {
-  .card-mzitu {
-    grid-template-columns: auto;
-    grid-template-rows: auto;
-  }
+.el-icon-loading {
+  font-size: 28px;
+  color: $--color-primary;
 }
 </style>

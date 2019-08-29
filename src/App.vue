@@ -8,6 +8,8 @@
 
 <style lang="scss">
 @import '@/theme/index.scss';
+@import '@/theme/globalClass.scss';
+
 * {
   padding: 0;
   margin: 0;
