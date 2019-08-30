@@ -13,12 +13,11 @@
 </template>
 
 <script>
-import LoginCard from './LoginCard'
 export default {
   name: 'login',
 
   components: {
-    LoginCard
+    LoginCard: () => import('./LoginCard')
   },
 
   data() {

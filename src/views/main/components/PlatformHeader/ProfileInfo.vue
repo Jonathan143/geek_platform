@@ -4,7 +4,7 @@
       @command="handleCommand">
       <div class="menu__label">
         <el-avatar size="medium"
-          src="https://img-1256555015.file.myqcloud.com/2019/05/14/5cda6fee81066.jpg"></el-avatar>
+          src="https://avatars2.githubusercontent.com/u/26000743?s=460&v=4"></el-avatar>
         <span class="menu__username">{{username}}</span>
         <i class="el-icon-arrow-down"></i>
       </div>

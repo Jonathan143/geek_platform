@@ -68,10 +68,11 @@
 </template>
 
 <script>
-import DialogImage from '@/components/DialogImage'
 import { mapState } from 'vuex'
 export default {
-  components: { DialogImage },
+  components: {
+    DialogImage: () => import('@/components/DialogImage')
+  },
   props: {},
   data() {
     return {

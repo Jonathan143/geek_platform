@@ -17,9 +17,8 @@
 </template>
 
 <script>
-import FileView from '@/components/FileView'
 export default {
-  components: { FileView },
+  components: { FileView: () => import('@/components/FileView') },
   props: {},
   data() {
     return {
