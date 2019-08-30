@@ -8,16 +8,8 @@
 
 <style lang="scss">
 @import '@/theme/index.scss';
-@import '@/theme/globalClass.scss';
+@import '@/theme/global.scss';
 
-* {
-  padding: 0;
-  margin: 0;
-}
-
-ul {
-  list-style: none;
-}
 html,
 body,
 #app {
