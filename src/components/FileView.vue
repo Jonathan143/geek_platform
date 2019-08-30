@@ -354,7 +354,6 @@ export default {
 @import '@/theme/index.scss';
 
 .cloud-list {
-  min-width: 1000px;
   &--border {
     border: 1px solid #ebeef5;
     border-bottom-width: 0;

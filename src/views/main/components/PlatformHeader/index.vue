@@ -1,5 +1,5 @@
 <template>
-  <header :style="{width:headerWidth}">
+  <div class="header">
     <div class="header-left">
       <div class="menu-trigger"
         @click="onMenuFoldClick">
@@ -10,7 +10,7 @@
     <div class="header-right">
       <profile-info></profile-info>
     </div>
-  </header>
+  </div>
 </template>
 
 <script>
@@ -45,11 +45,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/theme/index.scss';
-header {
-  position: fixed;
-  top: 0;
-  right: 0;
-  z-index: 90;
+.header {
   display: flex;
   height: 56px;
   color: #fff;
@@ -60,36 +56,38 @@ header {
   );
   align-items: center;
   justify-content: space-between;
-  transition: width 0.3s ease-in-out;
-}
-
-.header-left {
-  display: flex;
-  .menu-trigger {
+  // transition: all 0.3s linear;
+  &-left {
     display: flex;
-    flex-shrink: 0;
-    position: relative;
-    font-size: 22px;
-    height: 56px;
-    width: 56px;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    text-align: center;
-    i {
-      margin: auto;
+    .menu-trigger {
+      display: flex;
+      flex-shrink: 0;
+      position: relative;
+      font-size: 22px;
+      height: 56px;
+      width: 56px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      text-align: center;
+      i {
+        margin: auto;
+      }
+      &:hover {
+        background-color: rgba($color: #fff, $alpha: 0.2);
+      }
     }
-    &:hover {
-      background-color: rgba($color: #fff, $alpha: 0.2);
+    .page-title {
+      margin: auto;
+      padding-left: 15px;
     }
   }
-  .page-title {
-    margin: auto;
-    padding-left: 15px;
+  &-right {
+    margin-right: 10px;
+    flex-shrink: 0;
   }
 }
 
-.header-right {
-  margin-right: 10px;
-  flex-shrink: 0;
-}
+// .header
+
+// .header
 </style>

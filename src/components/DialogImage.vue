@@ -107,7 +107,7 @@ export default {
     margin-bottom: 10px;
   }
 
-  /deep/ .el-dialog {
+  ::v-deep .el-dialog {
     margin-top: 10vh !important;
     .el-dialog__body {
       max-height: 70vh;

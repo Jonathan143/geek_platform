@@ -4,11 +4,10 @@
     unique-opened
     :default-active="activeIndex"
     :collapse="isCollapsed">
-    <div class="logo-wrapper">
-      <div class="logo">
-        <i class="el-icon-s-platform"></i>
-        <span v-show="!isCollapsed">极客管理平台</span>
-      </div>
+    <div class="logo-wrapper"
+      @click="onMenuFoldClick">
+      <i class="el-icon-s-platform"></i>
+      <span v-show="!isCollapsed">极客管理平台</span>
     </div>
     <template v-for="item of menuList">
       <el-submenu v-if="item.children && item.children.length"
@@ -55,6 +54,10 @@ export default {
 
   methods: {
     ...mapActions('layout', ['updateMenuCollapsed']),
+
+    onMenuFoldClick() {
+      this.updateMenuCollapsed(!this.isCollapsed)
+    },
 
     reFindMenuList() {
       this.$callApi({ api: 'user/menu_list' }).then(data => {
@@ -107,17 +110,14 @@ export default {
   &:hover {
     color: $--color-primary;
   }
-  .logo {
-    display: flex;
-    height: 100%;
-    align-items: center;
-    padding: 0 20px;
-    i {
-      font-size: 24px;
-    }
-    span {
-      margin-left: 5px;
-    }
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  .el-icon-s-platform {
+    font-size: 24px;
+  }
+  span {
+    margin-left: 5px;
   }
 }
 
@@ -154,7 +154,7 @@ export default {
 
     &.el-submenu {
       position: relative;
-      /deep/ .el-submenu__title {
+      ::v-deep .el-submenu__title {
         @include active-right-line;
         * {
           color: $--color-primary;

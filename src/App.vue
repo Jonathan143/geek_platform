@@ -25,15 +25,22 @@ body,
   font-weight: normal;
   font-style: normal;
 }
-::-webkit-scrollbar-thumb {
-  background-color: hsla(223, 3%, 50%, 0.4);
+
+::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0);
 }
-::-webkit-scrollbar-thumb:hover {
-  background-color: $--color-primary;
+::-webkit-scrollbar-thumb {
+  border-radius: 6px;
+  background-color: hsla(223, 3%, 50%, 0.4);
+  &:hover {
+    background-color: $--color-primary;
+  }
 }
 ::-webkit-scrollbar {
   border: none;
-  width: 4px;
+  width: 6px;
   height: 4px;
 }
 </style>
