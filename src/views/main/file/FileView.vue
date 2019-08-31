@@ -1,16 +1,14 @@
 <template>
-  <div v-if="isLoaded"
-    class="cloud-list"
+  <div class="cloud-list"
     :class="{'cloud-list--border': !isGrid}">
     <el-table ref="cloudListTable"
-      v-if="!isGrid"
+      v-show="!isGrid"
       :data="list"
       :height="tableHeight"
       :header-cell-style="{'background-color':'#F4F5F9',color:'#000',padding:'5px 0',height:'45px'}"
       @selection-change="onSelectionChange"
       @sort-change="onSortChange">
-      <el-table-column v-if="!isZone"
-        type="selection"
+      <el-table-column type="selection"
         width="52px"
         align="center">
       </el-table-column>
@@ -42,49 +40,32 @@
           </div>
         </div>
       </el-table-column>
-      <el-table-column :label="isDeleteInfo?'删除时间':'最后修改时间'"
-        :prop="isDeleteInfo?'deleteTime':'ctime'"
+      <el-table-column label="最后修改时间"
+        prop="ctime"
         align="center"
         width="160"
         :formatter="formatDate"
-        :sortable="isSort"></el-table-column>
-      <el-table-column v-if="isZone"
-        label="分区人数 | 权限"
-        align="center">
-        <div slot-scope="scope">
-          <span class="cloud-list__member-count">
-            {{scope.row.memberCount}}人
-          </span>
-          <span class="cloud-list__permission"
-            @click="onPermissionClick(scope.row)">{{permissionName(scope.row.permission)}}</span>
-        </div>
-      </el-table-column>
+        sortable></el-table-column>
       <el-table-column label="大小"
         prop="size"
         align="center"
         width="150"
-        :sortable="isSort">
+        sortable>
         <template slot-scope="scope">
           {{formatSize(scope.row.size)}}
         </template>
       </el-table-column>
-      <el-table-column v-if="!isZone"
-        label="所有者"
+      <el-table-column label="所有者"
         prop="owner"
         align="center"
         width="80"></el-table-column>
-      <el-table-column v-if="isDeleteInfo"
-        label="已删除"
-        prop="deleteDay"
-        align="center"
-        width="180"></el-table-column>
       <el-table-column v-if="!noAction"
         label="操作"
         align="center"
         width="180">
         <div class="cloud-list__action"
           slot-scope="scope">
-          <span v-if="isCloudAdmin || scope.row.isAdmin || isAdmin || scope.row.uploaderid === userid"
+          <span v-if="isAdmin || scope.row.uploaderid === userid"
             @click="onRenameClick(scope.row)">重命名</span>
           <span v-if="hasDelete(scope.row)"
             @click="onDeleteClick(scope.row)">删除</span>
@@ -92,7 +73,7 @@
       </el-table-column>
     </el-table>
     <!-- 缩略图模式 -->
-    <template v-else>
+    <div v-show="isGrid">
       <div class="grid-header">
         <el-checkbox label="全选"
           :value="isAllGridChecked"
@@ -103,8 +84,8 @@
       </div>
       <div class="grid">
         <div class="grid__file-wrapper"
-          v-for="item of list"
-          :key="item.fileid">
+          v-for="(item,index) of list"
+          :key="index">
           <div class="grid__file"
             :title="item.name"
             @click="onFileClick(item)">
@@ -118,12 +99,13 @@
             @change="onGridCheckedChange(item,$event)"></el-checkbox>
         </div>
       </div>
-    </template>
+    </div>
   </div>
 </template>
 
 <script>
 import { formatFileSize } from '@/utils/file'
+import { isImage } from '@/utils/validator'
 import { mapState } from 'vuex'
 export default {
   name: 'cloudFileList',
@@ -131,18 +113,13 @@ export default {
   props: {
     // 不需要操作列
     noAction: Boolean,
-    // 是否需要排序
-    sortable: Boolean,
-    // 是否为分区目录
-    isZone: Boolean,
     // 是否为管理员
     isAdmin: Boolean,
-    // 是否为云盘管理员
-    isCloudAdmin: Boolean,
     // 是否为网格
-    isGrid: Boolean,
-    // 是否显示删除数据
-    isDeleteInfo: Boolean,
+    isGrid: {
+      type: Boolean,
+      default: false
+    },
     // 上传人 显示
     noUploader: Boolean,
     /**
@@ -167,7 +144,6 @@ export default {
     return {
       isAllIndeterminate: false,
       isAllGridChecked: false,
-      isLoaded: true,
       selectedList: [],
       userid: Store.get('user').id,
 
@@ -181,10 +157,6 @@ export default {
     }),
     gridSelectedList() {
       return this.list.filter(item => item.isChecked)
-    },
-
-    isSort() {
-      return this.sortable
     }
   },
 
@@ -192,25 +164,16 @@ export default {
     formatDate(...data) {
       return moment(data[2]).format('YYYY-MM-DD HH:mm')
     },
+
     formatSize(size) {
       return size ? formatFileSize(size) : '-'
     },
-    permissionName(code) {
-      const permissionMap = {
-        admin: '管理员',
-        edit: '可编辑',
-        view: '可浏览',
-        cloud: '云盘管理员'
-      }
-      return permissionMap[code]
-    },
+
     getFileExt(name, fileItem) {
-      if (fileItem && fileItem.type !== 'file') return ''
       const dotIndex = name.lastIndexOf('.')
       if (dotIndex !== -1) {
         return name.substr(dotIndex + 1)
       }
-      return ''
     },
 
     getFileIcon(item) {
@@ -222,16 +185,13 @@ export default {
         ppt: ['ppt', 'pptx'],
         txt: ['txt']
       }
-      const imageExtList = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'bmp']
-      if (item.type === 'zone') {
-        return `${imageHost}/icon-disk.svg`
-      } else if (item.type === 'dir') {
+      if (item.type === 'dir') {
         return `${imageHost}/icon-dir.svg`
       } else if (item.type === 'file') {
         const ext = this.getFileExt(item.name)
         if (ext) {
           // 先检查是不是图片，在缩略图模式下图片显示预览图
-          if (imageExtList.includes(ext.toLowerCase())) {
+          if (isImage(item.name)) {
             let baseImgICon = `${imageHost}/icon-image.svg`
             return this.isGrid ? item.url || baseImgICon : baseImgICon
           }
@@ -247,12 +207,11 @@ export default {
 
     hasDelete(item) {
       if (item.type === 'zone') {
-        return !item.size && (this.isCloudAdmin || item.isAdmin)
+        return !item.size && item.isAdmin
       } else {
         return (
-          this.isCloudAdmin ||
-          (item.type !== 'folder' &&
-            (item.isAdmin || this.isAdmin || item.uploaderid === this.userid))
+          item.type !== 'folder' &&
+          (item.isAdmin || this.isAdmin || item.uploaderid === this.userid)
         )
       }
     },
@@ -268,10 +227,6 @@ export default {
 
     onFileClick(item) {
       this.$emit('fileClick', item)
-    },
-
-    onPermissionClick(item) {
-      this.$emit('permission', item)
     },
 
     onRenameClick(item) {
@@ -322,13 +277,6 @@ export default {
   },
 
   watch: {
-    isZone(val) {
-      this.isLoaded = false
-      this.$nextTick(() => {
-        this.isLoaded = true
-      })
-    },
-
     isGrid(val) {
       this.selectedList = []
       this.gridSelectedList.forEach(item => {
@@ -403,21 +351,22 @@ export default {
     }
   }
 }
-.grid-header {
-  height: 45px;
-  line-height: 45px;
-  background-color: #f4f5f9;
-  padding: 0 15px;
-  &__count {
-    margin-left: 10px;
-    font-size: 14px;
-    color: $--color-primary;
-  }
-}
 
 .grid {
   display: flex;
   flex-wrap: wrap;
+  &-header {
+    height: 45px;
+    line-height: 45px;
+    background-color: #f4f5f9;
+    padding: 0 15px;
+    margin-bottom: 10px;
+    &__count {
+      margin-left: 10px;
+      font-size: 14px;
+      color: $--color-primary;
+    }
+  }
   &__file {
     cursor: pointer;
     padding: 10px;

@@ -12,11 +12,18 @@
       no-uploader
       is-admin
       no-action
+      :is-grid="isGrid"
       @fileClick="onFileClick"></file-view>
+
+    <el-button class="file__chang-btn"
+      icon="el-icon-menu"
+      circle
+      @click="isGrid=!isGrid"></el-button>
   </div>
 </template>
 
 <script>
+import { isImage } from '@/utils/validator'
 export default {
   components: { FileView: () => import('./FileView') },
   props: {},
@@ -24,7 +31,8 @@ export default {
     return {
       fileList: [],
       queryPath: '/',
-      breadcrumbList: [{ name: '根目录', path: '/' }]
+      breadcrumbList: [{ name: '根目录', path: '/' }],
+      isGrid: false
     }
   },
   computed: {},
@@ -51,8 +59,16 @@ export default {
           name: file.name,
           path: this.queryPath
         })
-      } else if (file.url) {
-        window.open(file.url)
+      } else if (isImage(file.name)) {
+        this.$msgbox({
+          title: file.name,
+          message: `<image style="width: 100%; height: 100%"
+                    src="${file.url}"
+                    fit="fit"></image>`,
+          dangerouslyUseHTMLString: true,
+          showConfirmButton: false,
+          center: true
+        }).catch(() => {})
       }
     },
 
@@ -78,6 +94,11 @@ export default {
     font-size: 14px;
     line-height: 22px;
     padding-bottom: 10px;
+  }
+  &__chang-btn {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
   }
 }
 </style>
