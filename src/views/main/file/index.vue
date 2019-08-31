@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  components: { FileView: () => import('@/components/FileView') },
+  components: { FileView: () => import('./FileView') },
   props: {},
   data() {
     return {
@@ -51,6 +51,8 @@ export default {
           name: file.name,
           path: this.queryPath
         })
+      } else if (file.url) {
+        window.open(file.url)
       }
     },
 

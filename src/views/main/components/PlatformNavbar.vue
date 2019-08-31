@@ -2,6 +2,7 @@
   <el-menu ref="menu"
     class="menu"
     unique-opened
+    text-color="#606266"
     :default-active="activeIndex"
     :collapse="isCollapsed">
     <div class="logo-wrapper"
@@ -14,14 +15,16 @@
         :key="item.id"
         :index="item.id">
         <template slot="title">
-          <i :class="item.icon"></i>
+          <geek-icon :name="item.icon"
+            :font-class="item.fontClass"></geek-icon>
           <span>{{item.title}}</span>
         </template>
         <el-menu-item v-for="el of item.children"
           :key="el.id"
           :index="el.route.name"
           @click="onMenuItemClick(el,item)">
-          <i :class="el.icon"></i>
+          <geek-icon :name="item.icon"
+            :font-class="item.fontClass"></geek-icon>
           <span slot="title">{{el.title}}</span>
         </el-menu-item>
       </el-submenu>
@@ -29,7 +32,8 @@
         :key="item.id"
         :index="item.route.name"
         @click="onMenuItemClick(item)">
-        <i :class="item.icon"></i>
+        <geek-icon :name="item.icon"
+          :font-class="item.fontClass"></geek-icon>
         <span slot="title">{{item.title}}</span>
       </el-menu-item>
     </template>
@@ -68,7 +72,9 @@ export default {
     },
 
     onMenuItemClick(item, parent) {
-      this.$router.push(item.route)
+      if (this.$route.name !== item.route.name) {
+        this.$router.push(item.route)
+      }
     },
 
     updateActiveIndex(name) {
@@ -107,6 +113,7 @@ export default {
   user-select: none;
   border-bottom: 1px solid $--color-border-1;
   cursor: pointer;
+  color: $--color-text-medium;
   &:hover {
     color: $--color-primary;
   }
@@ -122,11 +129,9 @@ export default {
 }
 
 .menu {
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 80;
   height: 100%;
+  box-sizing: border-box;
+
   &:not(.el-menu--collapse) {
     width: 200px;
   }
@@ -139,7 +144,7 @@ export default {
     &::before {
       content: '';
       position: absolute;
-      right: 0;
+      right: -1px;
       top: 0;
       width: 3px;
       height: 100%;
@@ -162,5 +167,13 @@ export default {
       }
     }
   }
+}
+
+.geek_icon {
+  margin-right: 5px;
+  width: 24px;
+  text-align: center;
+  font-size: 18px;
+  vertical-align: middle;
 }
 </style>

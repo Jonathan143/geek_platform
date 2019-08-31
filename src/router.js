@@ -37,6 +37,12 @@ export default new Router({
           name: 'file',
           component: () =>
             import(/* webpackChunkName: "file" */ './views/main/file')
+        },
+        {
+          path: 'reptile',
+          name: 'reptile',
+          component: () =>
+            import(/* webpackChunkName: "reptile" */ './views/main/reptile')
         }
       ]
     }
