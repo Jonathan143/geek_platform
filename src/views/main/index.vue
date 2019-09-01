@@ -9,7 +9,9 @@
         <platform-header></platform-header>
       </el-header>
       <el-main>
-        <router-view></router-view>
+        <transition name="el-zoom-in-center">
+          <router-view />
+        </transition>
       </el-main>
     </el-container>
   </el-container>

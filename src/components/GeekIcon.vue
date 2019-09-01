@@ -1,5 +1,10 @@
 <template>
-  <svg v-if="name"
+  <el-image v-if="isImage(name)"
+    :style="style"
+    fit="cover"
+    lazy
+    :src="name"></el-image>
+  <svg v-else-if="name"
     class="geek_icon"
     :style="style"
     aria-hidden="true">
@@ -12,6 +17,7 @@
 </template>
 
 <script>
+import { isImage } from '@/utils/validator'
 import { isNumber } from 'util'
 export default {
   name: 'geekIcon',
@@ -37,11 +43,19 @@ export default {
 
   computed: {
     style() {
-      return {
-        fontSize: isNumber(this.size) ? `${this.size}px` : this.size,
-        color: this.color
-      }
+      const size = isNumber(this.size) ? `${this.size}px` : this.size
+      return Object.assign(
+        {
+          fontSize: size,
+          color: this.color
+        },
+        isImage(this.name) ? { width: size, height: size } : {}
+      )
     }
+  },
+
+  methods: {
+    isImage
   }
 }
 </script>

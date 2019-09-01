@@ -2,7 +2,7 @@
   <div class="cloud-list"
     :class="{'cloud-list--border': !isGrid}">
     <el-table ref="cloudListTable"
-      v-show="!isGrid"
+      v-if="!isGrid"
       :data="list"
       :height="tableHeight"
       :header-cell-style="{'background-color':'#F4F5F9',color:'#000',padding:'5px 0',height:'45px'}"
@@ -15,9 +15,8 @@
       <el-table-column label="名称">
         <div class="cloud-list__file"
           slot-scope="scope">
-          <img @click="onFileClick(scope.row)"
-            :src="getFileIcon(scope.row)"
-            width="20px" />
+          <geek-icon size="26px"
+            :name="`file${getFileIcon(scope.row)}`"></geek-icon>
           <span class="cloud-list__file-name"
             v-if="!scope.row.isRename"
             @click="onFileClick(scope.row)">{{scope.row.name}}</span>
@@ -89,9 +88,8 @@
           <div class="grid__file"
             :title="item.name"
             @click="onFileClick(item)">
-            <div class="grid__file-icon"
-              :style="{'background-image':`url(${getFileIcon(item)})`}">
-            </div>
+            <geek-icon size="60px"
+              :name="getGridIcon(item)"></geek-icon>
             <div class="grid__file-name">{{item.name}}</div>
           </div>
           <el-checkbox v-model="item.isChecked"
@@ -107,6 +105,7 @@
 import { formatFileSize } from '@/utils/file'
 import { isImage } from '@/utils/validator'
 import { mapState } from 'vuex'
+import fileIcons from './fileIcon'
 export default {
   name: 'cloudFileList',
 
@@ -161,6 +160,13 @@ export default {
   },
 
   methods: {
+    isImage,
+
+    getGridIcon(item) {
+      const icon = this.getFileIcon(item)
+      return (isImage(icon) ? '' : 'file') + icon
+    },
+
     formatDate(...data) {
       return moment(data[2]).format('YYYY-MM-DD HH:mm')
     },
@@ -177,32 +183,24 @@ export default {
     },
 
     getFileIcon(item) {
-      const imageHost = 'https://static.weixiaotong.com.cn/static/icon/pcmain'
-      const fileIconMap = {
-        pdf: ['pdf'],
-        excel: ['xls', 'xlsx'],
-        word: ['doc', 'docx'],
-        ppt: ['ppt', 'pptx'],
-        txt: ['txt']
-      }
       if (item.type === 'dir') {
-        return `${imageHost}/icon-dir.svg`
+        return '-dir-2'
       } else if (item.type === 'file') {
         const ext = this.getFileExt(item.name)
         if (ext) {
           // 先检查是不是图片，在缩略图模式下图片显示预览图
           if (isImage(item.name)) {
-            let baseImgICon = `${imageHost}/icon-image.svg`
+            let baseImgICon = '-image'
             return this.isGrid ? item.url || baseImgICon : baseImgICon
           }
-          for (let key in fileIconMap) {
-            if (fileIconMap[key].includes(ext.toLowerCase())) {
-              return `${imageHost}/icon-${key}.svg`
+          for (let key of Object.keys(fileIcons)) {
+            if (fileIcons[key].includes(ext.toLowerCase())) {
+              return key
             }
           }
         }
       }
-      return `${imageHost}/icon-unknown.svg`
+      return '_unknown'
     },
 
     hasDelete(item) {
@@ -313,6 +311,7 @@ export default {
     color: $--color-primary;
   }
   &__file-name {
+    padding-left: 10px;
     @include test_multiEllipsis;
   }
   &__member-count {
@@ -373,26 +372,17 @@ export default {
     flex-shrink: 0;
     width: 100px;
     border-radius: 5px;
+    text-align: center;
     &:hover {
       background-color: rgba(229, 233, 242, 0.6);
     }
     &-wrapper {
       position: relative;
     }
-    &-icon {
-      height: 62px;
-      margin-bottom: 15px;
-      background-repeat: no-repeat;
-      background-size: contain;
-      background-position: center;
-    }
     &-name {
-      text-align: center;
-      // height: 21px;
       font-size: 14px;
       font-weight: 400;
       color: rgba(51, 51, 51, 1);
-      line-height: 21px;
       @include test_multiEllipsis;
     }
     &-checkbox {
