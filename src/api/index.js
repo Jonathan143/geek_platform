@@ -79,11 +79,14 @@ const callApi = ({
         }
       }
       printError({ method, api, param, config, error })
+
       let message =
         (error.response &&
           error.response.data &&
           error.response.data.message) ||
-        error.message
+        error.message ||
+        error.error
+
       if (message.includes('Network Error')) {
         message = '服务器异常! /(ㄒoㄒ)/~~'
       }
