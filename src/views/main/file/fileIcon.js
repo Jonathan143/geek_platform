@@ -1,9 +1,9 @@
 export default {
   // '-dir-2': ['dir'],
   '-music-2': ['mp3', 'ogg', 'wav', 'flac', 'ape', 'alac'],
-  '-zip-2': ['zip', '7z', 'tar', 'rar'],
+  '-zip-2': ['zip', '7z', 'tar', 'rar', 'tgz', 'jar'],
   '-ppt': ['ppt', 'pptx'],
-  '-text': ['txt'],
+  '-text': ['txt', 'text'],
   '-bt': ['bt'],
   '-image': ['png', 'jpeg', 'gif', 'svg', 'jpg', 'ico'],
   '-vedio-2': [
