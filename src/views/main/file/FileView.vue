@@ -2,7 +2,7 @@
   <div class="cloud-list"
     :class="{'cloud-list--border': !isGrid}">
     <el-table ref="cloudListTable"
-      v-if="!isGrid"
+      v-show="!isGrid"
       :data="list"
       :height="tableHeight"
       :header-cell-style="{'background-color':'#F4F5F9',color:'#000',padding:'5px 0',height:'45px'}"
