@@ -66,6 +66,12 @@ const callApi = ({
   return $[method](api, method === 'post' ? param : { params: param })
     .then(({ data }) => {
       if (data.message === 'success') {
+        if (data.data.message) {
+          Notification.success({
+            title: 'success',
+            message: data.data.message
+          })
+        }
         return Promise.resolve(data.data)
       } else {
         return Promise.reject(data)

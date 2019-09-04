@@ -23,7 +23,7 @@
       infinite-scroll-distance="360"
       :infinite-scroll-disabled="infiniteDisabled">
       <el-card class="card-mzitu__content"
-        v-for="(mzitu,index) in mzituList"
+        v-for="(mzitu, index) in mzituList"
         :key="index"
         :body-style="{ padding: '0px' }">
         <el-image :src="mzitu.coverUrl"
@@ -39,9 +39,10 @@
             <el-link class="content__title"
               :href="mzitu.url"
               :underline="false"
-              target="_blank"><i class="el-icon-view el-icon--right"></i> {{mzitu.name}}</el-link>
+              target="_blank"><i class="el-icon-view el-icon--right"></i>
+              {{ mzitu.name }}</el-link>
           </el-tooltip>
-          <div class="content__date">{{mzitu.date}}</div>
+          <div class="content__date">{{ mzitu.date }}</div>
         </div>
         <el-button class="card-mzitu__download"
           circle
@@ -203,7 +204,7 @@ export default {
     position: relative;
     cursor: pointer;
     height: 354px;
-    margin-bottom: 20px;
+    margin: 0 10px 20px;
     &:hover {
       .content {
         opacity: 1;

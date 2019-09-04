@@ -3,11 +3,13 @@
     <div class="auth-wrapper">
       <el-avatar class="logo"
         :size="120"
-        src="https://img-1256555015.file.myqcloud.com/2019/08/06/5d49915f5f6b5.png"
-        @click.native="login"></el-avatar>
-      <p class="logo__text">Enter Now!</p>
+        :src="logoSrc"
+        @click.native="onLogoClick"></el-avatar>
+      <p class="logo__text">{{logoText}}</p>
       <el-divider></el-divider>
-      <login-card></login-card>
+      <div class="login__component">
+        <component :is="currentComponent" />
+      </div>
     </div>
   </div>
 </template>
@@ -17,11 +19,36 @@ export default {
   name: 'login',
 
   components: {
-    LoginCard: () => import('./LoginCard')
+    LoginCard: () => import('./LoginCard'),
+    RegisterCard: () => import('./RegisterCard')
   },
 
   data() {
-    return {}
+    return {
+      currentComponent: 'LoginCard'
+    }
+  },
+
+  computed: {
+    isLogin() {
+      return this.currentComponent === 'LoginCard'
+    },
+
+    logoSrc() {
+      return `https://img-1256555015.file.myqcloud.com/2019/08/06/${
+        this.isLogin ? '5d49915f5f6b5' : '5d49915f65107'
+      }.png`
+    },
+
+    logoText() {
+      return (this.isLogin ? 'Enter' : 'Register') + ' Now!'
+    }
+  },
+
+  methods: {
+    onLogoClick() {
+      this.currentComponent = this.isLogin ? 'RegisterCard' : 'LoginCard'
+    }
   }
 }
 </script>
@@ -41,7 +68,7 @@ export default {
   position: relative;
   text-align: center;
   width: 400px;
-  height: 500px;
+  height: 520px;
   padding: 0 40px 40px;
   box-sizing: border-box;
   border-radius: 12px;
@@ -65,11 +92,24 @@ export default {
 }
 
 .logo {
-  margin: 10px auto;
+  margin: 10px auto 16px;
+  cursor: pointer;
   &__text {
+    user-select: none;
     font-size: 30px;
     line-height: 36px;
     color: #fff;
   }
+}
+
+.login__component {
+  display: flex;
+  width: 100%;
+  height: calc(100% - 170px);
+  align-items: center;
+}
+
+.el-divider--horizontal {
+  margin: 10px 0;
 }
 </style>

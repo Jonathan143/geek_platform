@@ -109,8 +109,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.card-login {
-  width: 400px;
+.el-form {
+  width: 100%;
 }
 .buttons-wrapper {
   display: flex;
