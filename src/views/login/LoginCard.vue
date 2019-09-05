@@ -38,10 +38,13 @@
 
 <script>
 import { mapState } from 'vuex'
+import login from '@/mixins/login'
 export default {
   computed: {
     ...mapState({ token: state => state.user.token })
   },
+
+  mixins: [login],
 
   data() {
     return {
@@ -54,28 +57,6 @@ export default {
   },
 
   methods: {
-    reLogin() {
-      this.$callApi({
-        method: 'post',
-        api: 'user/login',
-        param: {
-          username: this.user.username,
-          password: this.user.password
-        }
-      }).then(data => {
-        Store.set('user', data, new Date().getTime() + 3 * 24 * 60 * 60 * 1000)
-        const config = { expires: 3 }
-        process.env.NODE_ENV === 'production'
-          ? Object.assign(config, { domain: '.yang143.cn' })
-          : ''
-        Cookies.set('token', data.token, config)
-        const { redirect } = this.$route.query
-        redirect
-          ? this.$router.push(redirect)
-          : this.$router.replace({ name: 'main' })
-      })
-    },
-
     onGuestClick() {
       this.isLoggingIn = true
       this.$refs.form.clearValidate()
@@ -95,7 +76,7 @@ export default {
     onLoginClick() {
       this.$refs.form
         .validate()
-        .then(this.reLogin)
+        .then(this.reLogin(this.user))
         .catch(() => {})
     }
   },

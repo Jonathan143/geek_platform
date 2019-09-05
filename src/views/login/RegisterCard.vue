@@ -36,7 +36,10 @@
 </template>
 
 <script>
+import login from '@/mixins/login'
 export default {
+  mixins: [login],
+
   data() {
     return {
       registerFrom: {
@@ -108,7 +111,9 @@ export default {
         api: 'user/register',
         param: this.registerFrom,
         method: 'post'
-      }).then(data => {})
+      }).then(data => {
+        this.reLogin(this.registerFrom)
+      })
     }
   },
 
