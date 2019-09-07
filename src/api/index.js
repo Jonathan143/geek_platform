@@ -58,6 +58,7 @@ const callApi = ({
   api,
   param,
   config = {},
+  filter = false,
   noNotify = false
 } = {}) => {
   if (noNotify && !config.timeout) config['timeout'] = 1000 * 120
@@ -65,7 +66,7 @@ const callApi = ({
 
   return $[method](api, method === 'post' ? param : { params: param })
     .then(({ data }) => {
-      if (data.message === 'success') {
+      if (data.message === 'success' || filter) {
         if (data.data.message) {
           Notification.success({
             title: 'success',

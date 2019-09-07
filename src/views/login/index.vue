@@ -3,12 +3,13 @@
     <div class="auth-wrapper">
       <el-avatar class="logo"
         :size="120"
-        :src="logoSrc"
+        :src="avatar||logoSrc"
         @click.native="onLogoClick"></el-avatar>
       <p class="logo__text">{{logoText}}</p>
       <el-divider></el-divider>
       <div class="login__component">
-        <component :is="currentComponent" />
+        <component :is="currentComponent"
+          @avatar="setAvatar" />
       </div>
     </div>
   </div>
@@ -25,7 +26,8 @@ export default {
 
   data() {
     return {
-      currentComponent: 'LoginCard'
+      currentComponent: 'LoginCard',
+      avatar: ''
     }
   },
 
@@ -48,6 +50,10 @@ export default {
   methods: {
     onLogoClick() {
       this.currentComponent = this.isLogin ? 'RegisterCard' : 'LoginCard'
+    },
+
+    setAvatar(url) {
+      this.avatar = url
     }
   }
 }

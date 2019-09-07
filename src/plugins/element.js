@@ -41,7 +41,9 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   Checkbox,
-  InfiniteScroll
+  InfiniteScroll,
+  Radio,
+  RadioGroup
 } from 'element-ui'
 import '../theme/element-variables.scss'
 import 'element-ui/lib/theme-chalk/base.css'
@@ -86,6 +88,8 @@ Vue.use(Button)
   .use(BreadcrumbItem)
   .use(Checkbox)
   .use(InfiniteScroll)
+  .use(Radio)
+  .use(RadioGroup)
 
 Vue.prototype.$loading = Loading.service
 Vue.prototype.$msgbox = MessageBox

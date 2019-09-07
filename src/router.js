@@ -43,6 +43,12 @@ export default new Router({
           name: 'reptile',
           component: () =>
             import(/* webpackChunkName: "reptile" */ './views/main/reptile')
+        },
+        {
+          path: 'usermanagement',
+          name: 'userManagement',
+          component: () =>
+            import(/* webpackChunkName: "userManagement" */ './views/main/user')
         }
       ]
     }

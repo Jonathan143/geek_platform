@@ -4,7 +4,7 @@
       @command="handleCommand">
       <div class="menu__label">
         <el-avatar size="medium"
-          src="https://avatars2.githubusercontent.com/u/26000743?s=460&v=4"></el-avatar>
+          :src="avatar"></el-avatar>
         <span class="menu__username">{{username}}</span>
         <i class="el-icon-arrow-down"></i>
       </div>
@@ -27,7 +27,8 @@ export default {
   },
   computed: {
     ...mapState('user', {
-      username: state => state.nickname || state.username
+      username: state => state.nickname || state.username,
+      avatar: state => state.avatar
     })
   },
   methods: {

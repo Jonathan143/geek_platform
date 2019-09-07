@@ -4,16 +4,23 @@
     :rules="rules"
     status-icon
     ref="registerFrom">
+    <el-form-item label="用户类型">
+      <el-radio-group v-model="registerFrom.userType">
+        <el-radio label="QQ"></el-radio>
+        <el-radio label="Github"></el-radio>
+      </el-radio-group>
+    </el-form-item>
     <el-form-item prop="username">
       <el-input v-model="registerFrom.username"
         prefix-icon="el-icon-user"
-        placeholder="请输入用户名"></el-input>
+        :placeholder="`${registerFrom.userType}`"
+        @change="onUsernameChange"></el-input>
     </el-form-item>
-    <el-form-item prop="email">
+    <!-- <el-form-item prop="email">
       <el-input v-model="registerFrom.email"
         prefix-icon="el-icon-message"
         placeholder="请输入邮箱"></el-input>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item prop="password">
       <el-input v-model="registerFrom.password"
         type="password"
@@ -43,15 +50,17 @@ export default {
   data() {
     return {
       registerFrom: {
+        userType: 'QQ',
         username: '',
         email: '',
         password: '',
-        repeatPassword: ''
+        repeatPassword: '',
+        avatar: ''
       },
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+          { min: 2, max: 20, message: '长度在 2 到 10 个字符', trigger: 'blur' }
         ],
         email: [
           {
@@ -106,6 +115,34 @@ export default {
         .catch(() => {})
     },
 
+    async onUsernameChange(username) {
+      let avatar = ''
+      if (this.registerFrom.userType === 'QQ') {
+        avatar = `https://q2.qlogo.cn/headimg_dl?dst_uin=${username}&spec=100`
+        this.registerFrom.email = `${username}@qq.com`
+      } else {
+        await this.$callApi({
+          api: `https://api.github.com/users/${username}`,
+          filter: true,
+          param: {}
+        }).then(data => {
+          avatar = data.avatar_url
+        })
+      }
+      this.registerFrom.avatar = avatar
+      this.$emit('avatar', avatar)
+    },
+
+    reFindUserQQInfo(qq) {
+      this.$callApi({
+        api: `http://r.qzone.qq.com/fcg-bin/cgi_get_score.fcg?mask=7&uins=${qq}`,
+        filter: true,
+        param: {}
+      }).then(data => {
+        console.log(data)
+      })
+    },
+
     reSaveRegister() {
       this.$callApi({
         api: 'user/register',
@@ -126,6 +163,12 @@ export default {
   width: 100%;
   .btn-register {
     width: 100%;
+  }
+  .el-radio {
+    color: #ffffff;
+  }
+  ::v-deep .el-form-item__label {
+    color: #ffffff;
   }
 }
 </style>
