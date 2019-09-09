@@ -103,8 +103,6 @@ export default {
     }
   },
 
-  computed: {},
-
   methods: {
     onRegisterClick() {
       this.$refs.registerFrom
@@ -121,13 +119,17 @@ export default {
         avatar = `https://q2.qlogo.cn/headimg_dl?dst_uin=${username}&spec=100`
         this.registerFrom.email = `${username}@qq.com`
       } else {
-        await this.$callApi({
-          api: `https://api.github.com/users/${username}`,
-          filter: true,
-          param: {}
-        }).then(data => {
-          avatar = data.avatar_url
-        })
+        try {
+          await this.$callApi({
+            api: `https://api.github.com/users/${username}`,
+            filter: true,
+            config: { withCredentials: false }
+          }).then(data => {
+            avatar = data.avatar_url
+          })
+        } catch (error) {
+          console.log(error)
+        }
       }
       this.registerFrom.avatar = avatar
       this.$emit('avatar', avatar)

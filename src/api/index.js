@@ -36,21 +36,13 @@ const printError = ({ method, api, param, config, error }) => {
  * 创建axios实例
  * 设置post请求头
  */
-let baseURL = ''
-if (process.env.NODE_ENV === 'development') {
-  baseURL = 'http://localhost:3200/'
-} else if (process.env.NODE_ENV === 'production') {
-  baseURL = 'https://api.yang143.cn/geek/'
-}
-const instance = {
-  timeout: 1000 * 12,
-  baseURL: baseURL,
-  withCredentials: true,
-  headers: {
-    post: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
-  }
+import { APIBASEURL } from '../config.js'
+
+axios.defaults.withCredentials = true
+axios.defaults.timeout = 1000 * 12
+axios.defaults.baseURL = APIBASEURL
+axios.defaults.headers.post = {
+  'Content-Type': 'application/x-www-form-urlencoded'
 }
 
 const callApi = ({
@@ -62,20 +54,20 @@ const callApi = ({
   noNotify = false
 } = {}) => {
   if (noNotify && !config.timeout) config['timeout'] = 1000 * 120
-  const $ = axios.create(Object.assign(instance, config))
+  const $ = axios.create(config)
 
   return $[method](api, method === 'post' ? param : { params: param })
     .then(({ data }) => {
       if (data.message === 'success' || filter) {
-        if (data.data.message) {
+        if (data.data && data.data.message) {
           Notification.success({
             title: 'success',
             message: data.data.message
           })
         }
-        return Promise.resolve(data.data)
+        return Promise.resolve(data.data || data)
       } else {
-        return Promise.reject(data)
+        return Promise.reject(data || data)
       }
     })
     .catch(error => {
