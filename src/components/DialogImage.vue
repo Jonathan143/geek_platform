@@ -25,7 +25,7 @@ export default {
     },
     urls: {
       type: Array || Object,
-      // required: true,
+      required: true,
       default: () => []
     }
   },

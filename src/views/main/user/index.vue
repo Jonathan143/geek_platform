@@ -10,12 +10,10 @@
       </template>
     </el-table-column>
     <el-table-column prop="username"
-      label="用户名"
-      width="180">
+      label="用户名">
     </el-table-column>
     <el-table-column prop="nickname"
-      label="昵称"
-      width="180">
+      label="昵称">
     </el-table-column>
     <el-table-column prop="email"
       label="邮箱">

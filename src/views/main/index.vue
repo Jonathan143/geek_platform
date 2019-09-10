@@ -9,7 +9,8 @@
         <platform-header></platform-header>
       </el-header>
       <el-main>
-        <transition name="el-zoom-in-center">
+        <transition name="el-fade-in-linear"
+          mode="out-in">
           <router-view />
         </transition>
       </el-main>
