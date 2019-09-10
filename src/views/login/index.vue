@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import { REGISTERED } from '@/config.js'
 export default {
   name: 'login',
 
@@ -49,7 +50,9 @@ export default {
 
   methods: {
     onLogoClick() {
-      this.currentComponent = this.isLogin ? 'RegisterCard' : 'LoginCard'
+      if (REGISTERED) {
+        this.currentComponent = this.isLogin ? 'RegisterCard' : 'LoginCard'
+      }
     },
 
     setAvatar(url) {

@@ -4,5 +4,6 @@ let baseUrls = {
 }
 
 module.exports = {
-  APIBASEURL: baseUrls[process.env.NODE_ENV]
+  APIBASEURL: baseUrls[process.env.NODE_ENV],
+  REGISTERED: true
 }

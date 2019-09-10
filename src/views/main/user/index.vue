@@ -20,6 +20,9 @@
     </el-table-column>
     <el-table-column prop="role"
       label="权限">
+      <template v-slot="scope">
+        {{scope.row.role&&scope.row.role.name}}
+      </template>
     </el-table-column>
     <el-table-column label="最后登录时间"
       width="160">
