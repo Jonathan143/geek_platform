@@ -25,6 +25,7 @@
 <script>
 import { isImage } from '@/utils/validator'
 export default {
+  name: 'file',
   components: { FileView: () => import('./FileView') },
   props: {},
   data() {
@@ -77,11 +78,21 @@ export default {
     }
   },
   watch: {
-    queryPath() {
+    queryPath(val) {
       this.reFindFileList()
+      localStorage.fileView = JSON.stringify({
+        path: val,
+        breadcrumbList: this.breadcrumbList
+      })
     }
   },
   mounted() {
+    const fileView = localStorage.fileView
+    if (fileView) {
+      const { path, breadcrumbList } = JSON.parse(fileView)
+      this.queryPath = path
+      this.breadcrumbList = breadcrumbList
+    }
     this.reFindFileList()
   }
 }

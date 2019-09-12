@@ -58,6 +58,7 @@
 <script>
 import { Loading } from 'element-ui'
 export default {
+  name: 'mzituCardView',
   components: {
     layout: () => import('@/layout')
   },
@@ -78,13 +79,11 @@ export default {
         index: 1,
         total: 0
       },
-      loadingInstance: true
+      loadingInstance: true,
+      noMore: false
     }
   },
   computed: {
-    noMore() {
-      return this.page.total >= 200
-    },
     infiniteDisabled() {
       return this.isLoading || this.noMore
     },
@@ -156,16 +155,20 @@ export default {
         },
         noNotify: true
       }).then(data => {
-        this.mzituList = infinite ? [...this.mzituList, ...data] : data
+        if (data.length) {
+          this.mzituList = infinite ? [...this.mzituList, ...data] : data
+          if (infinite) {
+            this.page.index++
+            this.page.total = this.mzituList.length
+          }
+        } else {
+          this.noMore = true
+        }
         this.isLoading = false
         this.$nextTick(() => {
           // 以服务的方式调用的 Loading 需要异步关闭
           this.loadingInstance.close()
         })
-        if (infinite) {
-          this.page.index++
-          this.page.total = this.mzituList.length
-        }
       })
     },
 

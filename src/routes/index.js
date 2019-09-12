@@ -19,12 +19,11 @@ for (const router of routerContex.keys()) {
 }
 
 export default new Router({
-  mode: 'history',
   base: process.env.BASE_URL,
   routes: [
     {
       path: '/',
-      redirect: '/main'
+      redirect: { name: 'login' }
     },
     {
       path: '/login',
