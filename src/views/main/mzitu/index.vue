@@ -1,26 +1,10 @@
 <template>
-  <div>
-    <mzitu-card-view></mzitu-card-view>
-    <!-- <mzitu-table></mzitu-table> -->
-  </div>
+  <router-view />
 </template>
 
 <script>
-export default {
-  components: {
-    MzituTable: () => import('./components/MzituTable'),
-    MzituCardView: () => import('./components/MzituCardView')
-  },
-  props: {},
-  data() {
-    return {}
-  },
-  computed: {},
-  methods: {},
-  mounted() {}
-}
+export default {}
 </script>
 
 <style lang="scss" scoped>
-@import '@/theme/index.scss';
 </style>
