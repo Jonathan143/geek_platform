@@ -103,7 +103,7 @@ export default {
 
     initReData() {
       this.initLoadingInstance()
-      this.page.index = 0
+      this.page.index = 1
       this.reFindMzitu()
     },
 
