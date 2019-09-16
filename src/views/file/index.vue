@@ -92,8 +92,9 @@ export default {
       const { path, breadcrumbList } = JSON.parse(fileView)
       this.queryPath = path
       this.breadcrumbList = breadcrumbList
+    } else {
+      this.reFindFileList()
     }
-    this.reFindFileList()
   }
 }
 </script>

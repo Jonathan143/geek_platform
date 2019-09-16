@@ -56,7 +56,7 @@ $axios.interceptors.response.use(
     }
     const { status, data } = response
 
-    if (((status >= 200 && status < 300) || status === 304) && !data.error) {
+    if ((status >= 200 && status < 300) || status === 304) {
       if (data.message) {
         Notification.success({
           title: 'success',
@@ -64,13 +64,8 @@ $axios.interceptors.response.use(
         })
       }
       return Promise.resolve(data)
-    } else {
-      Notification.error({
-        title: '错误',
-        message: data.error
-      })
-      return Promise.reject(response)
     }
+    return Promise.reject(response)
   },
   error => {
     if (loading) loading.close()
