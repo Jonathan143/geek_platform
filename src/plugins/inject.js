@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Store from 'store'
 import expirePlugin from 'store/plugins/expire'
-import callApi from '@/api'
+import callApi from '@/api/api'
 import './element'
 import '../components'
 import moment from 'moment'
