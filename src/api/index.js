@@ -4,7 +4,7 @@
  */
 import { Notification } from 'element-ui'
 import axios from 'axios'
-import router from '../router'
+import Router from 'vue-router'
 // import qs from 'qs' // 根据需求导入qs模块
 
 /**
@@ -14,9 +14,9 @@ import router from '../router'
 const toLogin = () => {
   Store.clearAll()
   Cookies.remove('token')
-  const { name, fullPath } = router.currentRoute
+  const { name, fullPath } = Router.currentRoute
   if (name === 'login') return
-  router.replace({
+  Router.replace({
     name: 'login',
     query: {
       redirect: fullPath

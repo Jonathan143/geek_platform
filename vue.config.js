@@ -5,12 +5,25 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 const isDevelopment = process.env.NODE_ENV !== 'production'
 const isAnalyzer = process.env.npm_lifecycle_event === 'analyzer'
 
+const path = require('path')
+const resolve = function(dir) {
+  return path.join(__dirname, dir)
+}
 module.exports = {
   publicPath: isDevelopment ? '/' : '',
-  productionSourceMap: false,
+  lintOnSave: true, // 是否开启eslint保存检测
+  productionSourceMap: false, // 是否在构建生产包时生成sourcdeMap
   devServer: {
+    hot: true,
+    open: true,
     compress: true,
     port: 8666
+  },
+  chainWebpack: config => {
+    config.resolve.alias
+      .set('@', resolve('src'))
+      .set('views', resolve('src/views'))
+    config.optimization.runtimeChunk('single')
   },
   configureWebpack: () => {
     const customConfig = {

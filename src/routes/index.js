@@ -1,25 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import LayoutMain from '@/layout/main'
 
 Vue.use(Router)
-let routerContex = require.context('./', true, /.js$/)
-let mainChildren = [
-  {
-    path: 'file',
-    name: 'file',
-    component: () => import(/* webpackChunkName: "file" */ '@/views/main/file')
-  }
-]
-
-for (const router of routerContex.keys()) {
-  if (!router.startsWith('./index')) {
-    let routerModule = routerContex(router)
-    mainChildren = [...mainChildren, ...(routerModule.default || routerModule)]
-  }
-}
 
 export default new Router({
-  base: process.env.BASE_URL,
   routes: [
     {
       path: '/',
@@ -28,16 +13,66 @@ export default new Router({
     {
       path: '/login',
       name: 'login',
-      component: () =>
-        import(/* webpackChunkName: "login" */ '@/views/login/index.vue')
+      component: () => import(/* webpackChunkName: "login" */ 'views/login')
     },
     {
-      path: '/main',
-      name: 'main',
-      redirect: { name: 'home' },
-      component: () =>
-        import(/* webpackChunkName: "main" */ '@/views/main/index.vue'),
-      children: mainChildren
+      path: '/overview',
+      component: LayoutMain,
+      children: [
+        {
+          path: '',
+          name: 'overview',
+          component: () =>
+            import(/* webpackChunkName: "home" */ 'views/overview')
+        }
+      ]
+    },
+    {
+      path: '/mzitu',
+      component: LayoutMain,
+      children: [
+        {
+          path: '',
+          name: 'mzitu',
+          component: () =>
+            import(/* webpackChunkName: "mzitu" */ 'views/mzitu/cardView')
+        }
+      ]
+    },
+    {
+      path: '/file',
+      component: LayoutMain,
+      children: [
+        {
+          path: '',
+          name: 'file',
+          component: () => import(/* webpackChunkName: "file" */ 'views/file')
+        }
+      ]
+    },
+    {
+      path: '/reptile',
+      component: LayoutMain,
+      children: [
+        {
+          path: '',
+          name: 'reptile',
+          component: () =>
+            import(/* webpackChunkName: "reptile" */ 'views/reptile')
+        }
+      ]
+    },
+    {
+      path: '/user',
+      component: LayoutMain,
+      children: [
+        {
+          path: 'management',
+          name: 'userManagement',
+          component: () =>
+            import(/* webpackChunkName: "file" */ 'views/user/userManagement')
+        }
+      ]
     }
   ]
 })

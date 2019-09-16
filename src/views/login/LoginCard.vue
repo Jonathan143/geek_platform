@@ -69,7 +69,7 @@ export default {
         token: 'guest'
       })
       setTimeout(() => {
-        this.$router.replace({ name: 'main' })
+        this.$router.replace({ name: 'overview' })
       }, 1000)
     },
 
@@ -83,7 +83,7 @@ export default {
 
   created() {
     if (this.token) {
-      this.$router.replace({ name: 'main' })
+      this.$router.replace({ name: 'overview' })
     }
   }
 }

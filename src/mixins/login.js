@@ -30,7 +30,7 @@ export default {
           const { redirect } = this.$route.query
           redirect
             ? this.$router.push(redirect)
-            : this.$router.replace({ name: 'main' })
+            : this.$router.replace({ name: 'overview' })
 
           loading.close()
         })
