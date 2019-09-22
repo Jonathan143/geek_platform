@@ -94,6 +94,5 @@ $axios.interceptors.response.use(
   }
 )
 
-export default function({ api, method = 'get', param }) {
-  return $axios[method](api, method === 'post' ? param : { params: param })
-}
+export default ({ api, method = 'get', param }) =>
+  $axios[method](api, method === 'post' ? param : { params: param })

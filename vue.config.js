@@ -23,6 +23,7 @@ module.exports = {
     config.resolve.alias
       .set('@', resolve('src'))
       .set('views', resolve('src/views'))
+      .set('api', resolve('src/api'))
     config.optimization.runtimeChunk('single')
   },
   configureWebpack: () => {
