@@ -56,7 +56,12 @@
 </template>
 
 <script>
-import { Loading } from 'element-ui'
+import {
+  reFetchAlbumUrls,
+  reSaveMzituAlbum,
+  reFetchMzituCategoryList,
+  reFetchMzitu
+} from 'api/mzitu'
 export default {
   name: 'mzituCardView',
   components: {
@@ -79,7 +84,6 @@ export default {
         index: 1,
         total: 0
       },
-      loadingInstance: true,
       noMore: false
     }
   },
@@ -102,31 +106,20 @@ export default {
     },
 
     initReData() {
-      this.initLoadingInstance()
       this.page.index = 1
       this.reFindMzitu()
     },
 
-    onGetAllPicClick(mzitu) {
+    onGetAllPicClick({ url, name, date }) {
       this.isDownloading = true
-      this.$callApi({
-        api: 'mzitu/picurl',
-        param: {
-          url: mzitu.url
-        }
-      }).then(data => {
+      reFetchAlbumUrls(url).then(data => {
         this.$message.success('服务器正在下载中')
-        this.reSaveDownload(data.srcList, mzitu.name, mzitu.date)
+        this.reSaveDownload(data.srcList, name, date)
       })
     },
 
     reSaveDownload(urls, name, date) {
-      this.$callApi({
-        method: 'post',
-        api: 'mzitu/download',
-        param: { urls, name, date },
-        noNotify: true
-      })
+      reSaveMzituAlbum(urls, name, date)
         .then(data => {
           this.$message.success('下载成功')
         })
@@ -136,24 +129,17 @@ export default {
     },
 
     reFindCategoryList() {
-      this.$callApi({
-        api: 'mzitu/get_category_list',
-        param: {}
-      }).then(data => {
+      reFetchMzituCategoryList().then(data => {
         this.categoryList = data
       })
     },
 
     reFindMzitu(infinite = false) {
       this.isLoading = true
-      this.$callApi({
-        api: 'mzitu',
-        param: {
-          type: this.currentCategory,
-          content: this.searchMzitu,
-          page: this.page.index
-        },
-        noNotify: true
+      reFetchMzitu({
+        type: this.currentCategory,
+        content: this.searchMzitu,
+        page: this.page.index
       }).then(data => {
         if (data.length) {
           this.mzituList = infinite ? [...this.mzituList, ...data] : data
@@ -165,15 +151,7 @@ export default {
           this.noMore = true
         }
         this.isLoading = false
-        this.$nextTick(() => {
-          // 以服务的方式调用的 Loading 需要异步关闭
-          this.loadingInstance.close()
-        })
       })
-    },
-
-    initLoadingInstance() {
-      this.loadingInstance = Loading.service({ text: '加载妹子中...' })
     }
   },
 
@@ -185,9 +163,6 @@ export default {
     }
   },
 
-  created() {
-    this.initLoadingInstance()
-  },
   mounted() {
     this.reFindCategoryList()
   }

@@ -24,6 +24,7 @@
 
 <script>
 import { isImage } from '@/utils/validator'
+import { reFetchFileList } from 'api/file'
 export default {
   name: 'file',
   components: { FileView: () => import('./FileView') },
@@ -39,10 +40,7 @@ export default {
   computed: {},
   methods: {
     reFindFileList() {
-      this.$callApi({
-        api: 'file',
-        param: { path: this.queryPath }
-      }).then(data => {
+      reFetchFileList(this.queryPath).then(data => {
         this.fileList = [...data.dir, ...data.file]
 
         const breadcrumbList = this.breadcrumbList

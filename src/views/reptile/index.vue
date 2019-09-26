@@ -17,6 +17,7 @@
 
 <script>
 import { APIBASEURL } from '@/config.js'
+import { reFetchMenuList, reResetMenuList } from 'api/user'
 export default {
   components: {},
   props: {},
@@ -27,20 +28,10 @@ export default {
   },
   computed: {},
   methods: {
-    onResetMenuClick() {
-      this.$callApi({
-        api: 'user/reset_menu',
-        param: {}
-      }).then(data => {
-        this.reFindMenuList()
-      })
-    },
-
-    reFindMenuList() {
-      this.$callApi({ api: 'user/menu_list' }).then(data => {
-        this.menuList = data
-        Store.set('menu', data)
-      })
+    async onResetMenuClick() {
+      await reResetMenuList()
+      const data = await reFetchMenuList()
+      Store.set('menu', data)
     }
   },
   mounted() {}

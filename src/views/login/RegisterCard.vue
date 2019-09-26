@@ -16,11 +16,12 @@
         :placeholder="`${registerFrom.userType}`"
         @change="onUsernameChange"></el-input>
     </el-form-item>
-    <!-- <el-form-item prop="email">
+    <el-form-item prop="email"
+      v-show="isEmailInputShow">
       <el-input v-model="registerFrom.email"
         prefix-icon="el-icon-message"
         placeholder="请输入邮箱"></el-input>
-    </el-form-item> -->
+    </el-form-item>
     <el-form-item prop="password">
       <el-input v-model="registerFrom.password"
         type="password"
@@ -44,6 +45,7 @@
 
 <script>
 import login from '@/mixins/login'
+import { reFetchUserGithubInfo, reSaveRegister } from 'api/login'
 export default {
   mixins: [login],
 
@@ -103,12 +105,20 @@ export default {
     }
   },
 
+  computed: {
+    isEmailInputShow() {
+      return this.registerFrom.userType === 'Github'
+    }
+  },
+
   methods: {
     onRegisterClick() {
       this.$refs.registerFrom
         .validate()
         .then(() => {
-          this.reSaveRegister()
+          reSaveRegister(this.registerFrom).then(data => {
+            this.reLogin(this.registerFrom)
+          })
         })
         .catch(() => {})
     },
@@ -120,11 +130,7 @@ export default {
         this.registerFrom.email = `${username}@qq.com`
       } else {
         try {
-          await this.$callApi({
-            api: `https://api.github.com/users/${username}`,
-            filter: true,
-            config: { withCredentials: false }
-          }).then(data => {
+          await reFetchUserGithubInfo().then(data => {
             avatar = data.avatar_url
           })
         } catch (error) {
@@ -133,26 +139,6 @@ export default {
       }
       this.registerFrom.avatar = avatar
       this.$emit('avatar', avatar)
-    },
-
-    reFindUserQQInfo(qq) {
-      this.$callApi({
-        api: `http://r.qzone.qq.com/fcg-bin/cgi_get_score.fcg?mask=7&uins=${qq}`,
-        filter: true,
-        param: {}
-      }).then(data => {
-        console.log(data)
-      })
-    },
-
-    reSaveRegister() {
-      this.$callApi({
-        api: 'user/register',
-        param: this.registerFrom,
-        method: 'post'
-      }).then(data => {
-        this.reLogin(this.registerFrom)
-      })
     }
   },
 

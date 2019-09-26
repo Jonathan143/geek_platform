@@ -1,3 +1,4 @@
+import { reSaveLogin } from 'api/login'
 export default {
   methods: {
     reLogin({ username, password }) {
@@ -8,14 +9,7 @@ export default {
         background: 'rgba(0, 0, 0, 0.7)'
       })
 
-      this.$callApi({
-        method: 'post',
-        api: 'user/login',
-        param: {
-          username,
-          password
-        }
-      })
+      reSaveLogin({ username, password })
         .then(data => {
           Store.set(
             'user',

@@ -37,7 +37,6 @@ let loading = null
 // 请求拦截器
 $axios.interceptors.request.use(
   config => {
-    loading = Loading.service({ text: '拼命加载中...' })
     const { token } = store.state.user
     if (token) {
       config.headers.Authorization = token // 请求头部添加token
@@ -51,9 +50,7 @@ $axios.interceptors.request.use(
 // 响应拦截器
 $axios.interceptors.response.use(
   response => {
-    if (loading) {
-      loading.close()
-    }
+    if (loading) loading.close()
     const { status, data } = response
 
     if ((status >= 200 && status < 300) || status === 304) {
@@ -94,5 +91,15 @@ $axios.interceptors.response.use(
   }
 )
 
-export default ({ api, method = 'get', param }) =>
-  $axios[method](api, method === 'post' ? param : { params: param })
+export default ({
+  api,
+  method = 'get',
+  param,
+  isLoading = true,
+  loadingText
+}) => {
+  if (isLoading) {
+    loading = Loading.service({ text: loadingText || '拼命加载中...' })
+  }
+  return $axios[method](api, method === 'post' ? param : { params: param })
+}

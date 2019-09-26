@@ -42,6 +42,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
+import { reFetchMenuList } from 'api/user'
 export default {
   name: 'PlatformNavbar',
 
@@ -64,7 +65,7 @@ export default {
     },
 
     reFindMenuList() {
-      this.$callApi({ api: 'user/menu_list' }).then(data => {
+      reFetchMenuList().then(data => {
         this.menuList = data
         Store.set('menu', data)
         this.updateActiveIndex(this.$route.name)

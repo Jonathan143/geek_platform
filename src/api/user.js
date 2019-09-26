@@ -32,3 +32,15 @@ export function reUpdateUserById({ ...param }) {
     param
   })
 }
+
+export function reFetchMenuList() {
+  return $axios({
+    api: 'user/menu_list'
+  })
+}
+
+export function reResetMenuList() {
+  return $axios({
+    api: 'user/reset_menu'
+  })
+}
