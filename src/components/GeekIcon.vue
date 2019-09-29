@@ -61,4 +61,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.geek_icon {
+  flex-shrink: 0;
+}
 </style>

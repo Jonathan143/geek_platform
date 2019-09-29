@@ -43,7 +43,8 @@ import {
   Checkbox,
   InfiniteScroll,
   Radio,
-  RadioGroup
+  RadioGroup,
+  Switch
 } from 'element-ui'
 import '../theme/element-variables.scss'
 import 'element-ui/lib/theme-chalk/base.css'
@@ -90,6 +91,7 @@ Vue.use(Button)
   .use(InfiniteScroll)
   .use(Radio)
   .use(RadioGroup)
+  .use(Switch)
 
 Vue.prototype.$loading = Loading.service
 Vue.prototype.$msgbox = MessageBox

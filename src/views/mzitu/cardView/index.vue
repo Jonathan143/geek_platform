@@ -18,40 +18,25 @@
       </el-input>
     </template>
 
-    <div class="card-mzitu"
-      v-infinite-scroll="onMoreLoad"
-      infinite-scroll-distance="360"
-      :infinite-scroll-disabled="infiniteDisabled">
-      <el-card class="card-mzitu__content"
-        v-for="(mzitu, index) in mzituList"
-        :key="index"
-        :body-style="{ padding: '0px' }">
-        <el-image :src="mzitu.coverUrl"
-          fit="cover"
-          width="100%"
-          :alt="mzitu.name"
-          lazy></el-image>
-        <div class="content">
-          <el-tooltip class="item"
-            effect="dark"
-            :content="`在线预览：${mzitu.url}`"
-            placement="top">
-            <el-link class="content__title"
-              :href="mzitu.url"
-              :underline="false"
-              target="_blank"><i class="el-icon-view el-icon--right"></i>
-              {{ mzitu.name }}</el-link>
-          </el-tooltip>
-          <div class="content__date">{{ mzitu.date }}</div>
-        </div>
-        <el-button class="card-mzitu__download"
-          circle
-          type="primary"
-          icon="el-icon-upload"
-          @click="onGetAllPicClick(mzitu)"></el-button>
-      </el-card>
-    </div>
-    <el-divider><i :class="loadIconClass"></i></el-divider>
+    <card-view v-model="isLoading"
+      :data="mzituList"
+      :total-count="666"
+      :source-keys="sourceKeys"
+      @load="onMoreLoad"
+      @right-top-icon-click="onGetAllPicClick">
+      <template #default="{mzitu}">
+        <el-tooltip class="item"
+          effect="dark"
+          :content="`在线预览：${mzitu.url}`"
+          placement="top">
+          <el-link class="content__title"
+            :href="mzitu.url"
+            :underline="false"
+            target="_blank"><i class="el-icon-view el-icon--right"></i>
+            {{ mzitu.name }}</el-link>
+        </el-tooltip>
+      </template>
+    </card-view>
   </layout>
 </template>
 
@@ -65,7 +50,8 @@ import {
 export default {
   name: 'mzituCardView',
   components: {
-    layout: () => import('@/layout')
+    layout: () => import('@/layout'),
+    CardView: () => import('../components/CardView')
   },
   props: {},
   data() {
@@ -74,30 +60,21 @@ export default {
       categoryList: [],
       searchMzitu: '',
       mzituList: [],
-      isDialogImage: {
-        visible: false,
-        title: '',
-        urlList: []
-      },
+
       isLoading: false,
       page: {
         index: 1,
         total: 0
       },
-      noMore: false
+      sourceKeys: {
+        title: 'name'
+      }
     }
   },
-  computed: {
-    infiniteDisabled() {
-      return this.isLoading || this.noMore
-    },
-    loadIconClass() {
-      return this.noMore ? 'el-icon-finished' : 'el-icon-loading'
-    }
-  },
+
   methods: {
     onMoreLoad() {
-      this.reFindMzitu(true)
+      this.reFindMzitu()
     },
 
     onCategoryChange() {
@@ -107,6 +84,7 @@ export default {
 
     initReData() {
       this.page.index = 1
+      this.mzituList = []
       this.reFindMzitu()
     },
 
@@ -134,7 +112,7 @@ export default {
       })
     },
 
-    reFindMzitu(infinite = false) {
+    reFindMzitu() {
       this.isLoading = true
       reFetchMzitu({
         type: this.currentCategory,
@@ -142,11 +120,9 @@ export default {
         page: this.page.index
       }).then(data => {
         if (data.length) {
-          this.mzituList = infinite ? [...this.mzituList, ...data] : data
-          if (infinite) {
-            this.page.index++
-            this.page.total = this.mzituList.length
-          }
+          this.mzituList = [...this.mzituList, ...data]
+          this.page.index++
+          this.page.total = this.mzituList.length
         } else {
           this.noMore = true
         }
