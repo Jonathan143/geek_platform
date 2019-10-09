@@ -60,7 +60,7 @@ export default {
       categoryList: [],
       searchMzitu: '',
       mzituList: [],
-
+      isDownloading: false,
       isLoading: false,
       page: {
         index: 1,
@@ -89,20 +89,26 @@ export default {
     },
 
     onGetAllPicClick({ url, name, date }) {
-      this.isDownloading = true
-      reFetchAlbumUrls(url).then(data => {
-        this.$message.success('服务器正在下载中')
-        this.reSaveDownload(data.srcList, name, date)
-      })
+      if (this.isDownloading) {
+        this.$message.success('服务器正在下载中...')
+      } else {
+        this.isDownloading = true
+        reFetchAlbumUrls(url).then(data => {
+          this.$message.success('开始下载...')
+          this.reSaveDownload(data.srcList, name, date)
+        })
+      }
     },
 
     reSaveDownload(urls, name, date) {
       reSaveMzituAlbum(urls, name, date)
         .then(data => {
           this.$message.success('下载成功')
+          this.isDownloading = false
         })
         .catch(() => {
           this.$message.error('下载失败咯')
+          this.isDownloading = false
         })
     },
 
@@ -123,8 +129,6 @@ export default {
           this.mzituList = [...this.mzituList, ...data]
           this.page.index++
           this.page.total = this.mzituList.length
-        } else {
-          this.noMore = true
         }
         this.isLoading = false
       })
@@ -147,52 +151,4 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/theme/index.scss';
-
-.card-mzitu {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  &__content {
-    width: 236px;
-    position: relative;
-    cursor: pointer;
-    height: 354px;
-    margin: 0 10px 20px;
-    &:hover {
-      .content {
-        opacity: 1;
-      }
-    }
-    .content {
-      padding: 10px;
-      color: #fff;
-      font-size: 14px;
-      background: rgba(0, 0, 0, 0.4);
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      opacity: 0;
-      transition: all 0.5s ease-in-out;
-      &__title {
-        color: #fff;
-        &:hover {
-          color: #90caf9;
-        }
-      }
-      &__date {
-        text-align: right;
-      }
-    }
-  }
-  &__download {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-  }
-}
-.el-icon-loading {
-  font-size: 28px;
-  color: $--color-primary;
-}
 </style>

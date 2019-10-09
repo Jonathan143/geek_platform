@@ -18,7 +18,8 @@
         </slot>
         <div class="content__date">{{ mzitu[keys.date] }}</div>
       </div>
-      <el-button class="card-mzitu__right-top-icon"
+      <el-button v-if="rightTopIconVisible||!mzitu.isDownload"
+        class="card-mzitu__right-top-icon"
         circle
         type="primary"
         :icon="rightTopIcon"
@@ -53,6 +54,10 @@ export default {
       type: Object,
       default: () => defaultKeys()
     },
+    rightTopIconVisible: {
+      type: Boolean,
+      default: false
+    },
     rightTopIcon: {
       type: String,
       default: 'el-icon-upload'
@@ -61,10 +66,6 @@ export default {
       type: Number,
       required: true
     }
-    // load: {
-    //   type: Function,
-    //   required: true
-    // }
   },
   data() {
     return {}
@@ -86,7 +87,6 @@ export default {
   methods: {
     onMoreLoad() {
       if (!this.value) {
-        // this.load()
         this.$emit('updete:value', true)
         this.$emit('load')
       }

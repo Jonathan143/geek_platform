@@ -12,7 +12,8 @@ export function reSaveMzituAlbum(urls, name, date) {
   return $axios({
     method: 'post',
     api: 'mzitu/download',
-    param: { urls, name, date }
+    param: { urls, name, date },
+    isLoading: false
   })
 }
 
@@ -30,6 +31,16 @@ export function reFetchMzitu({ type, content, page }) {
       type,
       content,
       page
+    }
+  })
+}
+
+export function reFetchMzituByTitle({ nameLike, id }) {
+  return $axios({
+    api: 'mzitu/get_mziWhereIsDownload',
+    param: {
+      nameLike,
+      id
     }
   })
 }
