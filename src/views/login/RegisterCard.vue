@@ -16,12 +16,12 @@
         :placeholder="`${registerFrom.userType}`"
         @change="onUsernameChange"></el-input>
     </el-form-item>
-    <el-form-item prop="email"
+    <!-- <el-form-item prop="email"
       v-show="isEmailInputShow">
       <el-input v-model="registerFrom.email"
         prefix-icon="el-icon-message"
         placeholder="请输入邮箱"></el-input>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item prop="password">
       <el-input v-model="registerFrom.password"
         type="password"
@@ -130,7 +130,7 @@ export default {
         this.registerFrom.email = `${username}@qq.com`
       } else {
         try {
-          await reFetchUserGithubInfo().then(data => {
+          await reFetchUserGithubInfo(username).then(data => {
             avatar = data.avatar_url
           })
         } catch (error) {

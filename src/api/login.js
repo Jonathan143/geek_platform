@@ -19,7 +19,7 @@ export function reSaveRegister(param) {
   })
 }
 
-export function reFetchUserGithubInfo({ username, password }) {
+export function reFetchUserGithubInfo(username) {
   return $axios({
     api: `https://api.github.com/users/${username}`
   })
