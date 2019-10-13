@@ -35,12 +35,14 @@ export function reFetchMzitu({ type, content, page }) {
   })
 }
 
-export function reFetchMzituByTitle({ nameLike, id }) {
+export function reFetchMzituByTitle({ nameLike, id, pageSize, pageIndex }) {
   return $axios({
-    api: 'mzitu/get_mziWhereIsDownload',
+    api: 'mzitu/get_mziFromDataBase',
     param: {
       nameLike,
-      id
+      id,
+      pageSize,
+      pageIndex
     }
   })
 }

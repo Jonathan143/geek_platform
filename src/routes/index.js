@@ -36,6 +36,14 @@ export default new Router({
           name: 'mzitu',
           component: () =>
             import(/* webpackChunkName: "mzitu" */ 'views/mzitu/cardView')
+        },
+        {
+          path: 'downloadpreview',
+          name: 'mzituDownloadPreview',
+          component: () =>
+            import(
+              /* webpackChunkName: "mzitu" */ 'views/mzitu/downloadPreview'
+            )
         }
       ]
     },

@@ -23,8 +23,8 @@
           :key="el.id"
           :index="el.route.name"
           @click="onMenuItemClick(el,item)">
-          <geek-icon :name="item.icon"
-            :font-class="item.fontClass"></geek-icon>
+          <geek-icon :name="el.icon"
+            :font-class="el.fontClass"></geek-icon>
           <span slot="title">{{el.title}}</span>
         </el-menu-item>
       </el-submenu>

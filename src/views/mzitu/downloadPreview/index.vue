@@ -4,7 +4,8 @@
       :data="mzituList"
       :total-count="666"
       @load="onMoreLoad"
-      @right-top-icon-click="onDownlloadAllPicClick"></card-view>
+      @right-top-icon-click="onDownlloadAllPicClick"
+      @card-click="onCardClick" />
 
     <dialog-image :visible.sync="isDialogImage.visible"
       :title="isDialogImage.title"
@@ -20,7 +21,7 @@ import {
   reSaveMzituAlbum
 } from 'api/mzitu'
 export default {
-  components: {},
+  components: { CardView: () => import('../components/CardView') },
   props: {},
   data() {
     return {
@@ -30,6 +31,7 @@ export default {
       isDownloading: false,
       page: {
         index: 1,
+        size: 20,
         total: 0
       },
       isDialogImage: {
@@ -41,14 +43,31 @@ export default {
   },
   computed: {},
   methods: {
-    onDownlloadAllPicClick({ sourceUrl, name, date }) {
+    onDownlloadAllPicClick(mzi) {
+      const { sourceUrl } = mzi
       if (this.isDownloading) {
         this.$message.success('服务器正在下载中...')
       } else {
         this.isDownloading = true
         reFetchAlbumUrls(sourceUrl).then(data => {
           this.$message.success('开始下载...')
-          this.reSaveDownload(data.srcList, name, date)
+          this.reSaveDownload(data.srcList, mzi)
+        })
+      }
+    },
+
+    onCardClick(mzi) {
+      const { title, children } = mzi
+      if (mzi.isDownload) {
+        this.isDialogImage = {
+          visible: true,
+          title,
+          urlList: children
+        }
+      } else {
+        this.$message({
+          showClose: true,
+          message: `妹子图（${title}）未下载`
         })
       }
     },
@@ -59,23 +78,29 @@ export default {
 
     reFindMzitu() {
       this.isLoading = true
+      const { index, size } = this.page
       reFetchMzituByTitle({
-        nameLike: this.searchMzitu
-      }).then(data => {
-        if (data.length) {
-          this.mzituList = [...this.mzituList, ...data]
+        nameLike: this.searchMzitu,
+        pageSize: size,
+        pageIndex: index
+      }).then(({ mziList, total }) => {
+        if (mziList.length) {
+          this.mzituList = [...this.mzituList, ...mziList]
           this.page.index++
-          this.page.total = this.mzituList.length
+          this.page.total = total
         }
         this.isLoading = false
       })
     },
 
-    reSaveDownload(urls, name, date) {
-      reSaveMzituAlbum(urls, name, date)
+    reSaveDownload(urls, mzi) {
+      const { title, date } = mzi
+      reSaveMzituAlbum(urls, title, date)
         .then(data => {
-          this.$message.success('下载成功')
           this.isDownloading = false
+          mzi.isDownload = true
+          mzi.children = data
+          this.$message.success('下载成功')
         })
         .catch(() => {
           this.$message.error('下载失败咯')
@@ -83,7 +108,9 @@ export default {
         })
     }
   },
-  mounted() {}
+  mounted() {
+    // this.reFindMzitu()
+  }
 }
 </script>
 

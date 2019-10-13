@@ -24,13 +24,13 @@
       :source-keys="sourceKeys"
       @load="onMoreLoad"
       @right-top-icon-click="onGetAllPicClick">
-      <template #default="{mzitu}">
+      <template #default="mzitu">
         <el-tooltip class="item"
           effect="dark"
-          :content="`在线预览：${mzitu.url}`"
+          :content="`在线预览：${mzitu.sourceUrl}`"
           placement="top">
           <el-link class="content__title"
-            :href="mzitu.url"
+            :href="mzitu.sourceUrl"
             :underline="false"
             target="_blank"><i class="el-icon-view el-icon--right"></i>
             {{ mzitu.name }}</el-link>
@@ -88,12 +88,12 @@ export default {
       this.reFindMzitu()
     },
 
-    onGetAllPicClick({ url, name, date }) {
+    onGetAllPicClick({ sourceUrl, name, date }) {
       if (this.isDownloading) {
         this.$message.success('服务器正在下载中...')
       } else {
         this.isDownloading = true
-        reFetchAlbumUrls(url).then(data => {
+        reFetchAlbumUrls(sourceUrl).then(data => {
           this.$message.success('开始下载...')
           this.reSaveDownload(data.srcList, name, date)
         })
