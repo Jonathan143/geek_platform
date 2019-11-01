@@ -1,26 +1,45 @@
 <template>
-  <div>
+  <d2-container>
+    <template #header>
+      <el-select v-model="dataSource"
+        placeholder="请选择"
+        @change="onDataSourceChange">
+        <el-option v-for="item in dataOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+
+      <el-switch v-model="isDownloadModule"
+        active-text="下载本地"
+        inactive-text="上传服务器" />
+    </template>
+
     <card-view v-model="isLoading"
       :data="mzituList"
-      :total-count="666"
+      :total-count="page.total"
+      :right-top-icon="rightTopIcon"
       @load="onMoreLoad"
-      @right-top-icon-click="onDownlloadAllPicClick"
+      @right-top-icon-click="onRightTopIconClick"
       @card-click="onCardClick" />
 
     <dialog-image :visible.sync="isDialogImage.visible"
       :title="isDialogImage.title"
       :urls="isDialogImage.urlList"
       width="60%"></dialog-image>
-  </div>
+  </d2-container>
 </template>
 
 <script>
 import {
-  reFetchMzituByTitle,
+  reFetchMzituFromDataBase,
   reFetchAlbumUrls,
   reSaveMzituAlbum
-} from 'api/mzitu'
+} from '@/api/mzitu'
+import mzitu from '../mzitu'
 export default {
+  name: 'mzituDownloadPreview',
   components: { CardView: () => import('../components/CardView') },
   props: {},
   data() {
@@ -32,30 +51,38 @@ export default {
       page: {
         index: 1,
         size: 20,
-        total: 0
+        total: 1
       },
       isDialogImage: {
         visible: false,
         title: '',
         urlList: []
-      }
+      },
+      dataOptions: [
+        {
+          value: 0,
+          label: '所有妹子'
+        },
+        {
+          value: true,
+          label: '已下载'
+        },
+        {
+          value: false,
+          label: '未下载'
+        }
+      ],
+      dataSource: 0,
+      backupMzituList: []
     }
   },
-  computed: {},
+  mixins: [mzitu],
+  computed: {
+    rightTopIcon() {
+      return this.isDownloadModule ? 'fa fa-cloud-download' : 'el-icon-upload'
+    }
+  },
   methods: {
-    onDownlloadAllPicClick(mzi) {
-      const { sourceUrl } = mzi
-      if (this.isDownloading) {
-        this.$message.success('服务器正在下载中...')
-      } else {
-        this.isDownloading = true
-        reFetchAlbumUrls(sourceUrl).then(data => {
-          this.$message.success('开始下载...')
-          this.reSaveDownload(data.srcList, mzi)
-        })
-      }
-    },
-
     onCardClick(mzi) {
       const { title, children } = mzi
       if (mzi.isDownload) {
@@ -72,17 +99,20 @@ export default {
       }
     },
 
-    onMoreLoad() {
+    onDataSourceChange() {
+      this.page.index = 1
+      this.mzituList = []
       this.reFindMzitu()
     },
 
     reFindMzitu() {
       this.isLoading = true
       const { index, size } = this.page
-      reFetchMzituByTitle({
+      reFetchMzituFromDataBase({
         nameLike: this.searchMzitu,
         pageSize: size,
-        pageIndex: index
+        pageIndex: index,
+        isDownload: this.dataSource
       }).then(({ mziList, total }) => {
         if (mziList.length) {
           this.mzituList = [...this.mzituList, ...mziList]
@@ -91,21 +121,6 @@ export default {
         }
         this.isLoading = false
       })
-    },
-
-    reSaveDownload(urls, mzi) {
-      const { title, date } = mzi
-      reSaveMzituAlbum(urls, title, date)
-        .then(data => {
-          this.isDownloading = false
-          mzi.isDownload = true
-          mzi.children = data
-          this.$message.success('下载成功')
-        })
-        .catch(() => {
-          this.$message.error('下载失败咯')
-          this.isDownloading = false
-        })
     }
   },
   mounted() {

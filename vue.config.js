@@ -1,57 +1,106 @@
-const webpack = require('webpack')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin
+const VueFilenameInjector = require('@d2-projects/vue-filename-injector')
 
-const isDevelopment = process.env.NODE_ENV !== 'production'
-const isAnalyzer = process.env.npm_lifecycle_event === 'analyzer'
+const ThemeColorReplacer = require('webpack-theme-color-replacer')
+const forElementUI = require('webpack-theme-color-replacer/forElementUI')
 
-const path = require('path')
-const resolve = function(dir) {
-  return path.join(__dirname, dir)
-}
+// 拼接路径
+const resolve = dir => require('path').join(__dirname, dir)
+
+// 增加环境变量
+process.env.VUE_APP_VERSION = require('./package.json').version
+process.env.VUE_APP_BUILD_TIME = require('dayjs')().format('YYYY-M-D HH:mm:ss')
+
+// 基础路径 注意发布之前要先修改这里
+let publicPath = process.env.VUE_APP_PUBLIC_PATH || '/'
+
 module.exports = {
-  publicPath: isDevelopment ? '/' : '',
-  lintOnSave: true, // 是否开启eslint保存检测
-  productionSourceMap: false, // 是否在构建生产包时生成sourcdeMap
+  // 根据你的实际情况更改这里
+  publicPath,
+  lintOnSave: true,
+  productionSourceMap: false,
   devServer: {
-    hot: true,
-    open: true,
-    compress: true,
-    port: 8666
+    publicPath // 和 publicPath 保持一致
   },
-  chainWebpack: config => {
-    config.resolve.alias
-      .set('@', resolve('src'))
-      .set('views', resolve('src/views'))
-      .set('api', resolve('src/api'))
-    config.optimization.runtimeChunk('single')
-  },
-  configureWebpack: () => {
-    const customConfig = {
-      //警告 webpack 的性能提示
-      performance: {
-        hints: 'warning',
-        //入口起点的最大体积
-        maxEntrypointSize: 50000000,
-        //生成文件的最大体积
-        maxAssetSize: 30000000,
-        //只给出 js 文件的性能提示
-        assetFilter: function(assetFilename) {
-          return assetFilename.endsWith('.js')
-        }
-      },
-      plugins: [
-        new webpack.BannerPlugin({
-          banner: `Builder: Jonathan143\nBuild time: ${new Date()}`
-        }),
-        new webpack.ProvidePlugin({
-          moment: 'moment',
-          Cookies: 'js-cookie'
-        }),
-        new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /zh-cn/)
-      ]
+  css: {
+    loaderOptions: {
+      // 设置 scss 公用变量文件
+      sass: {
+        data: `@import '~@/assets/style/public.scss';`
+      }
     }
-    if (isAnalyzer) customConfig.plugins.push(new BundleAnalyzerPlugin())
-    return customConfig
+  },
+  // 默认设置: https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-service/lib/config/base.js
+  chainWebpack: config => {
+    /**
+     * 删除懒加载模块的 prefetch preload，降低带宽压力
+     * https://cli.vuejs.org/zh/guide/html-and-static-assets.html#prefetch
+     * https://cli.vuejs.org/zh/guide/html-and-static-assets.html#preload
+     * 而且预渲染时生成的 prefetch 标签是 modern 版本的，低版本浏览器是不需要的
+     */
+    config.plugins.delete('prefetch').delete('preload')
+    // 解决 cli3 热更新失效 https://github.com/vuejs/vue-cli/issues/1559
+    config.resolve.symlinks(true)
+    config.plugin('theme-color-replacer').use(ThemeColorReplacer, [
+      {
+        fileName: 'css/theme-colors.[contenthash:8].css',
+        matchColors: [
+          ...forElementUI.getElementUISeries(process.env.VUE_APP_ELEMENT_COLOR) // Element-ui主色系列
+        ],
+        externalCssFiles: [
+          './node_modules/element-ui/lib/theme-chalk/index.css'
+        ], // optional, String or string array. Set external css files (such as cdn css) to extract colors.
+        changeSelector: forElementUI.changeSelector
+      }
+    ])
+    config
+      // 开发环境
+      .when(
+        process.env.NODE_ENV === 'development',
+        // sourcemap不包含列信息
+        config => config.devtool('cheap-source-map')
+      )
+      // TRAVIS 构建 vue-loader 添加 filename
+      .when(
+        process.env.VUE_APP_SCOURCE_LINK === 'TRUE',
+        VueFilenameInjector(config, {
+          propName: process.env.VUE_APP_SOURCE_VIEWER_PROP_NAME
+        })
+      )
+    // markdown
+    config.module
+      .rule('md')
+      .test(/\.md$/)
+      .use('text-loader')
+      .loader('text-loader')
+      .end()
+    // svg
+    const svgRule = config.module.rule('svg')
+    svgRule.uses.clear()
+    svgRule.include
+      .add(resolve('src/assets/svg-icons/icons'))
+      .end()
+      .use('svg-sprite-loader')
+      .loader('svg-sprite-loader')
+      .options({
+        symbolId: 'd2-[name]'
+      })
+      .end()
+    // image exclude
+    const imagesRule = config.module.rule('images')
+    imagesRule
+      .test(/\.(png|jpe?g|gif|webp|svg)(\?.*)?$/)
+      .exclude.add(resolve('src/assets/svg-icons/icons'))
+      .end()
+    // 重新设置 alias
+    config.resolve.alias.set('@api', resolve('src/api'))
+  },
+  // i18n
+  pluginOptions: {
+    i18n: {
+      locale: 'zh-chs',
+      fallbackLocale: 'en',
+      localeDir: 'locales',
+      enableInSFC: true
+    }
   }
 }

@@ -10,7 +10,8 @@ module.exports = {
     'prettier/prettier': 0,
     'no-unused-vars': 0,
     'vue/use-v-on-exact': 0,
-    'vue/no-unused-components': 0
+    'vue/no-unused-components': 0,
+    'no-empty': 0
   },
   parserOptions: {
     parser: 'babel-eslint'

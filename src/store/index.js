@@ -1,15 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import user from './user'
-import layout from './layout'
+
+import d2admin from './modules/d2admin'
 
 Vue.use(Vuex)
 
-const defaultStore = {}
-
-defaultStore.modules = {
-  user,
-  layout
-}
-
-export default new Vuex.Store(defaultStore)
+export default new Vuex.Store({
+  modules: {
+    d2admin
+  }
+})

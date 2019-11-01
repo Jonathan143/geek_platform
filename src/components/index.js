@@ -1,12 +1,9 @@
 import Vue from 'vue'
-const componentsContext = require.context('./', true, /.vue$/)
-let components = {}
-componentsContext.keys().forEach(component => {
-  const componentConfig = componentsContext(component)
-  /**
-   * 兼容 import export 和 require module.export 两种规范
-   */
-  const ctrl = componentConfig.default || componentConfig
 
-  Vue.component(ctrl.name, ctrl)
-})
+import d2Container from './d2-container'
+
+// 注意 有些组件使用异步加载会有影响
+Vue.component('d2-container', d2Container)
+Vue.component('d2-icon', () => import('./d2-icon'))
+Vue.component('d2-icon-svg', () => import('./d2-icon-svg'))
+Vue.component('dialog-image', () => import('./dialog-image'))

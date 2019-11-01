@@ -1,4 +1,4 @@
-import $axios from './api'
+import $axios from '@/plugin/axios'
 
 export function reDeleteUserById({ id, username }) {
   return $axios({
@@ -11,10 +11,10 @@ export function reDeleteUserById({ id, username }) {
   })
 }
 
-export function reFetchUserList(id) {
+export function reFetchUserList({ id, namelike }) {
   return $axios({
     api: 'user/find_user_by_id',
-    param: { id }
+    param: { id, namelike }
   })
 }
 

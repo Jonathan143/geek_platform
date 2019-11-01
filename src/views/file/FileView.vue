@@ -1,11 +1,15 @@
 <template>
   <div class="cloud-list"
-    :class="{'cloud-list--border': !isGrid}">
+    :class="{ 'cloud-list--border': !isGrid }">
     <el-table ref="cloudListTable"
       v-show="!isGrid"
       :data="list"
-      :height="tableHeight"
-      :header-cell-style="{'background-color':'#F4F5F9',color:'#000',padding:'5px 0',height:'45px'}"
+      :header-cell-style="{
+        'background-color': '#F4F5F9',
+        color: '#000',
+        padding: '5px 0',
+        height: '45px'
+      }"
       @selection-change="onSelectionChange"
       @sort-change="onSortChange">
       <el-table-column type="selection"
@@ -15,11 +19,11 @@
       <el-table-column label="名称">
         <div class="cloud-list__file"
           slot-scope="scope">
-          <geek-icon size="26px"
-            :name="`file${getFileIcon(scope.row)}`"></geek-icon>
+          <d2-icon-svg size="26px"
+            :name="`file${getFileIcon(scope.row)}`"></d2-icon-svg>
           <span class="cloud-list__file-name"
             v-if="!scope.row.isRename"
-            @click="onFileClick(scope.row)">{{scope.row.name}}</span>
+            @click="onFileClick(scope.row)">{{ scope.row.name }}</span>
           <!-- 重命名输入框 -->
           <div v-else
             class="cloud-list__rename">
@@ -51,7 +55,7 @@
         width="150"
         sortable>
         <template slot-scope="scope">
-          {{formatSize(scope.row.size)}}
+          {{ formatSize(scope.row.size) }}
         </template>
       </el-table-column>
       <el-table-column label="所有者"
@@ -79,22 +83,28 @@
           :indeterminate="isAllIndeterminate"
           @change="onAllCheckedChange"></el-checkbox>
         <span v-if="gridSelectedList.length"
-          class="grid-header__count">（已选择 {{gridSelectedList.length}} 项）</span>
+          class="grid-header__count">（已选择 {{ gridSelectedList.length }} 项）</span>
       </div>
       <div class="grid">
         <div class="grid__file-wrapper"
-          v-for="(item,index) of list"
+          v-for="(item, index) of list"
           :key="index">
           <div class="grid__file"
             :title="item.name"
             @click="onFileClick(item)">
-            <geek-icon size="60px"
-              :name="getGridIcon(item)"></geek-icon>
-            <div class="grid__file-name">{{item.name}}</div>
+            <template v-if="isGrid&&getGridIcon(item).includes('http')">
+              <el-image style="width: 60px; height: 60px"
+                :src="getGridIcon(item)"
+                fit="cover" />
+            </template>
+            <d2-icon-svg v-else
+              size="60px"
+              :name="getGridIcon(item)"></d2-icon-svg>
+            <div class="grid__file-name">{{ item.name }}</div>
           </div>
           <el-checkbox v-model="item.isChecked"
             class="grid__file-checkbox"
-            @change="onGridCheckedChange(item,$event)"></el-checkbox>
+            @change="onGridCheckedChange(item, $event)"></el-checkbox>
         </div>
       </div>
     </div>
@@ -102,10 +112,11 @@
 </template>
 
 <script>
-import { formatFileSize } from '@/utils/file'
-import { isImage } from '@/utils/validator'
+import { formatFileSize } from '@/libs/util.file'
+import { isImage } from '@/libs/util.validator'
 import { mapState } from 'vuex'
 import fileIcons from './fileIcon'
+import dayjs from 'dayjs'
 export default {
   name: 'cloudFileList',
 
@@ -143,17 +154,12 @@ export default {
     return {
       isAllIndeterminate: false,
       isAllGridChecked: false,
-      selectedList: [],
-      userid: Store.get('user').id,
-
-      tableHeight: 0
+      selectedList: []
+      // userid: Store.get('user').id,
     }
   },
 
   computed: {
-    ...mapState('layout', {
-      bodyHeight: state => state.bodyHeight
-    }),
     gridSelectedList() {
       return this.list.filter(item => item.isChecked)
     }
@@ -168,7 +174,7 @@ export default {
     },
 
     formatDate(...data) {
-      return moment(data[2]).format('YYYY-MM-DD HH:mm')
+      return dayjs(data[2]).format('YYYY-MM-DD HH:mm')
     },
 
     formatSize(size) {
@@ -267,10 +273,6 @@ export default {
       console.log(item, isChecked)
 
       this.$emit('selectionChange', this.gridSelectedList)
-    },
-
-    setCloudListTableHeight() {
-      this.tableHeight = this.bodyHeight - 140
     }
   },
 
@@ -288,17 +290,12 @@ export default {
       this.isAllGridChecked =
         val.length === this.list.length && this.list.length !== 0
     }
-  },
-
-  created() {
-    if (!this.isGrid) this.setCloudListTableHeight()
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '@/theme/index.scss';
-
+@import '@/assets/style/mixins/text.scss';
 .cloud-list {
   &--border {
     border: 1px solid #ebeef5;
@@ -308,7 +305,7 @@ export default {
   &__permission,
   &__action {
     cursor: pointer;
-    color: $--color-primary;
+    color: $color-primary;
   }
   &__file-name {
     padding-left: 10px;
@@ -363,7 +360,7 @@ export default {
     &__count {
       margin-left: 10px;
       font-size: 14px;
-      color: $--color-primary;
+      color: $color-primary;
     }
   }
   &__file {

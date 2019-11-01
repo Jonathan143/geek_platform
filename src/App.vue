@@ -1,47 +1,28 @@
 <template>
   <div id="app">
-    <transition name="el-fade-in-linear"
-      mode="out-in">
-      <router-view />
-    </transition>
+    <router-view />
   </div>
 </template>
 
-<style lang="scss">
-@import '@/theme/index.scss';
-@import '@/theme/global.scss';
-
-html,
-body,
-#app {
-  height: 100%;
-  color: $--color-text-medium;
-  font-size: 14px;
-  font-family: 'pingFangSC-Bold';
-}
-@font-face {
-  font-family: 'pingFangSC-Bold';
-  src: url('https://static.weixiaotong.com.cn/static/icon/appstore/PingFang Bold.ttf');
-  /* src: url('./theme/PingFang Bold.ttf'); */
-  font-weight: normal;
-  font-style: normal;
-}
-
-::-webkit-scrollbar-track {
-  /*滚动条里面轨道*/
-  border-radius: 0;
-  background: rgba(0, 0, 0, 0);
-}
-::-webkit-scrollbar-thumb {
-  border-radius: 6px;
-  background-color: hsla(223, 3%, 50%, 0.4);
-  &:hover {
-    background-color: $--color-primary;
+<script>
+import util from '@/libs/util'
+export default {
+  name: 'app',
+  watch: {
+    '$i18n.locale': 'i18nHandle'
+  },
+  created() {
+    this.i18nHandle(this.$i18n.locale)
+  },
+  methods: {
+    i18nHandle(val, oldVal) {
+      util.cookies.set('lang', val)
+      document.querySelector('html').setAttribute('lang', val)
+    }
   }
 }
-::-webkit-scrollbar {
-  border: none;
-  width: 6px;
-  height: 4px;
-}
+</script>
+
+<style lang="scss">
+@import '~@/assets/style/public-class.scss';
 </style>

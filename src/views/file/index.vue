@@ -1,9 +1,10 @@
 <template>
-  <div class="file">
+  <d2-container class="file"
+    v-loading="isLoading">
     <el-breadcrumb class="file__breadcrumb">
-      <template v-for="(item) in breadcrumbList">
+      <template v-for="item in breadcrumbList">
         <el-breadcrumb-item :key="item.path"
-          @click.native="onBreadcrumbClick(item)"><a href="javascript:void(0)">{{item.name}}</a></el-breadcrumb-item>
+          @click.native="onBreadcrumbClick(item)"><a href="javascript:void(0)">{{ item.name }}</a></el-breadcrumb-item>
       </template>
     </el-breadcrumb>
 
@@ -18,15 +19,16 @@
     <el-button class="file__chang-btn"
       icon="el-icon-menu"
       circle
-      @click="isGrid=!isGrid"></el-button>
-  </div>
+      @click="isGrid = !isGrid"></el-button>
+  </d2-container>
 </template>
 
 <script>
-import { isImage } from '@/utils/validator'
-import { reFetchFileList } from 'api/file'
+import { isImage } from '@/libs/util.validator'
+import { reFetchFileList } from '@/api/file'
+import { mapGetters } from 'vuex'
 export default {
-  name: 'file',
+  name: 'fileIndex',
   components: { FileView: () => import('./FileView') },
   props: {},
   data() {
@@ -34,21 +36,30 @@ export default {
       fileList: [],
       queryPath: '/',
       breadcrumbList: [{ name: '根目录', path: '/' }],
-      isGrid: false
+      isGrid: false,
+      isLoading: false
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters('d2admin/user', ['userInfo'])
+  },
   methods: {
     reFindFileList() {
-      reFetchFileList(this.queryPath).then(data => {
-        this.fileList = [...data.dir, ...data.file]
+      this.isLoading = true
+      reFetchFileList(this.queryPath)
+        .then(data => {
+          this.fileList = [...data.dir, ...data.file]
 
-        const breadcrumbList = this.breadcrumbList
-        const currentIndex = breadcrumbList.findIndex(
-          item => item.path === this.queryPath
-        )
-        breadcrumbList.splice(currentIndex + 1, breadcrumbList.length)
-      })
+          const breadcrumbList = this.breadcrumbList
+          const currentIndex = breadcrumbList.findIndex(
+            item => item.path === this.queryPath
+          )
+          breadcrumbList.splice(currentIndex + 1, breadcrumbList.length)
+          this.isLoading = false
+        })
+        .catch(() => {
+          this.isLoading = false
+        })
     },
 
     onFileClick(file) {
@@ -58,7 +69,7 @@ export default {
           name: file.name,
           path: this.queryPath
         })
-      } else if (isImage(file.name)) {
+      } else if (isImage(file.name) && file.url) {
         this.$msgbox({
           title: file.name,
           message: `<image style="width: 100%; height: 100%"
@@ -98,7 +109,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/theme/index.scss';
 .file {
   &__breadcrumb {
     font-size: 14px;

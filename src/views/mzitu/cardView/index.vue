@@ -1,5 +1,5 @@
 <template>
-  <layout mode="table">
+  <d2-container>
     <template #header>
       <el-select v-model="currentCategory"
         @change="onCategoryChange"
@@ -21,9 +21,8 @@
     <card-view v-model="isLoading"
       :data="mzituList"
       :total-count="666"
-      :source-keys="sourceKeys"
       @load="onMoreLoad"
-      @right-top-icon-click="onGetAllPicClick">
+      @right-top-icon-click="onRightTopIconClick">
       <template #default="mzitu">
         <el-tooltip class="item"
           effect="dark"
@@ -33,11 +32,11 @@
             :href="mzitu.sourceUrl"
             :underline="false"
             target="_blank"><i class="el-icon-view el-icon--right"></i>
-            {{ mzitu.name }}</el-link>
+            {{ mzitu.title }}</el-link>
         </el-tooltip>
       </template>
     </card-view>
-  </layout>
+  </d2-container>
 </template>
 
 <script>
@@ -46,14 +45,14 @@ import {
   reSaveMzituAlbum,
   reFetchMzituCategoryList,
   reFetchMzitu
-} from 'api/mzitu'
+} from '@/api/mzitu'
+import mzitu from '../mzitu'
 export default {
-  name: 'mzituCardView',
+  name: 'mzituIndex',
   components: {
-    layout: () => import('@/layout'),
     CardView: () => import('../components/CardView')
   },
-  props: {},
+  mixins: [mzitu],
   data() {
     return {
       currentCategory: '',
@@ -65,51 +64,14 @@ export default {
       page: {
         index: 1,
         total: 0
-      },
-      sourceKeys: {
-        title: 'name'
       }
     }
   },
 
   methods: {
-    onMoreLoad() {
-      this.reFindMzitu()
-    },
-
     onCategoryChange() {
       this.searchMzitu = ''
       this.initReData()
-    },
-
-    initReData() {
-      this.page.index = 1
-      this.mzituList = []
-      this.reFindMzitu()
-    },
-
-    onGetAllPicClick({ sourceUrl, name, date }) {
-      if (this.isDownloading) {
-        this.$message.success('服务器正在下载中...')
-      } else {
-        this.isDownloading = true
-        reFetchAlbumUrls(sourceUrl).then(data => {
-          this.$message.success('开始下载...')
-          this.reSaveDownload(data.srcList, name, date)
-        })
-      }
-    },
-
-    reSaveDownload(urls, name, date) {
-      reSaveMzituAlbum(urls, name, date)
-        .then(data => {
-          this.$message.success('下载成功')
-          this.isDownloading = false
-        })
-        .catch(() => {
-          this.$message.error('下载失败咯')
-          this.isDownloading = false
-        })
     },
 
     reFindCategoryList() {
@@ -150,5 +112,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/theme/index.scss';
+.content__title {
+  color: #fff;
+}
 </style>

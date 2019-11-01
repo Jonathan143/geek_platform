@@ -7,11 +7,11 @@
       :key="index"
       :body-style="{ padding: '0px' }"
       @click.native="$emit('card-click',mzitu)">
-      <el-image :src="mzitu[keys.coverUrl]"
+      <!-- <el-image :src="mzitu[keys.coverUrl]"
         fit="cover"
         width="100%"
         :alt="mzitu[keys.title]"
-        lazy></el-image>
+        lazy></el-image> -->
       <div class="content">
         <slot v-bind="mzitu">
           <p class="content__title"><i class="el-icon-view el-icon--right"></i>
@@ -19,12 +19,15 @@
         </slot>
         <div class="content__date">{{ mzitu[keys.date] }}</div>
       </div>
-      <el-button v-if="rightTopIconVisible||!mzitu.isDownload"
-        class="card-mzitu__right-top-icon"
-        circle
-        type="primary"
-        :icon="rightTopIcon"
-        @click="onRightTopIconClick(mzitu)"></el-button>
+      <slot v-bind="mzitu"
+        name="right-top-icon">
+        <el-button v-if="rightTopIconVisible||!mzitu.isDownload"
+          class="card-mzitu__right-top-icon"
+          circle
+          type="primary"
+          :icon="rightTopIcon"
+          @click.stop="onRightTopIconClick(mzitu)"></el-button>
+      </slot>
     </el-card>
 
     <el-divider><i :class="loadIconClass"></i></el-divider>
@@ -61,7 +64,7 @@ export default {
     },
     rightTopIcon: {
       type: String,
-      default: 'el-icon-upload'
+      default: 'fa fa-cloud-download'
     },
     totalCount: {
       type: Number,
@@ -79,7 +82,7 @@ export default {
       return this.value || this.isFinished
     },
     loadIconClass() {
-      return this.isLoadAll ? 'el-icon-finished' : 'el-icon-loading'
+      return this.isFinished ? 'el-icon-finished' : 'el-icon-loading'
     },
     isFinished() {
       return this.data.length >= this.totalCount
@@ -102,8 +105,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/theme/index.scss';
-
 .card-mzitu {
   display: flex;
   align-items: center;
@@ -145,10 +146,11 @@ export default {
     position: absolute;
     top: 6px;
     right: 6px;
+    font-size: 16px;
   }
 }
 .el-icon-loading {
   font-size: 28px;
-  color: $--color-primary;
+  color: $color-primary;
 }
 </style>

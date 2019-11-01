@@ -1,4 +1,4 @@
-import $axios from './api'
+import $axios from '@/plugin/axios'
 
 export function reSaveLogin({ username, password }) {
   return $axios({
