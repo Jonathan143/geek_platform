@@ -7,11 +7,11 @@
       :key="index"
       :body-style="{ padding: '0px' }"
       @click.native="$emit('card-click',mzitu)">
-      <!-- <el-image :src="mzitu[keys.coverUrl]"
+      <el-image :src="mzitu[keys.coverUrl]"
         fit="cover"
         width="100%"
         :alt="mzitu[keys.title]"
-        lazy></el-image> -->
+        lazy></el-image>
       <div class="content">
         <slot v-bind="mzitu">
           <p class="content__title"><i class="el-icon-view el-icon--right"></i>

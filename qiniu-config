@@ -1,7 +1,7 @@
 {
-  "src_dir"            :   "/home/travis/build/Jonathan143/d2-admin-start-kit/dist",
+  "src_dir"            :   "/home/travis/build/Jonathan143/geek_platform/dist",
   "bucket"             :   "pan",
-  "key_prefix"         :   "my-project/geek-admin/",
+  "key_prefix"         :   "geek-platform/",
   "ignore_dir"         :   false,
   "overwrite"          :   true,
   "check_exists"       :   true,
