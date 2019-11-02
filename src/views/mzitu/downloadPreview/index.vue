@@ -19,7 +19,6 @@
     <card-view v-model="isLoading"
       :data="mzituList"
       :total-count="page.total"
-      :right-top-icon="rightTopIcon"
       @load="onMoreLoad"
       @right-top-icon-click="onRightTopIconClick"
       @card-click="onCardClick" />
@@ -77,11 +76,7 @@ export default {
     }
   },
   mixins: [mzitu],
-  computed: {
-    rightTopIcon() {
-      return this.isDownloadModule ? 'fa fa-cloud-download' : 'el-icon-upload'
-    }
-  },
+  computed: {},
   methods: {
     onCardClick(mzi) {
       const { title, children } = mzi

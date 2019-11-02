@@ -21,11 +21,11 @@
       </div>
       <slot v-bind="mzitu"
         name="right-top-icon">
-        <el-button v-if="rightTopIconVisible||!mzitu.isDownload"
+        <el-button v-if="rightTopIconVisible"
           class="card-mzitu__right-top-icon"
           circle
-          type="primary"
-          :icon="rightTopIcon"
+          :type="mzitu.isDownload ? 'primary' : ''"
+          :icon="mzitu.isDownload ? 'fa fa-cloud-download' : 'el-icon-upload'"
           @click.stop="onRightTopIconClick(mzitu)"></el-button>
       </slot>
     </el-card>
@@ -60,11 +60,7 @@ export default {
     },
     rightTopIconVisible: {
       type: Boolean,
-      default: false
-    },
-    rightTopIcon: {
-      type: String,
-      default: 'fa fa-cloud-download'
+      default: true
     },
     totalCount: {
       type: Number,

@@ -24,33 +24,25 @@ export default {
     },
 
     onRightTopIconClick(mzi) {
-      const { sourceUrl } = mzi
+      const { sourceUrl, isDownload, children, title } = mzi
       if (this.isDownloading) {
         this.$message.success('正在下载中...')
       } else {
         this.isDownloading = true
-        reFetchAlbumUrls(sourceUrl).then(({ srcList }) => {
-          this.$message.success('开始下载...')
-          // this.isDownloadModule
-          //   ? this.batchDownload(srcList, mzi.title)
-          //   : this.reSaveToServer(srcList, mzi)
-          this.reSaveToServer(srcList, mzi)
-        })
+        this.$message.success('开始下载...')
+        isDownload
+          ? this.handleBatchDownload({
+              fileList: children,
+              zipName: title
+            })
+          : reFetchAlbumUrls(sourceUrl).then(({ srcList }) => {
+              this.reSaveToServer(srcList, mzi)
+            })
       }
     },
 
     onMoreLoad() {
       this.reFindMzitu()
-    },
-
-    batchDownload(srcList, zipName) {
-      const fileList = srcList.map(item => item.imageUrl)
-      const headers = srcList.map(item => item.pageUrl)
-      this.handleBatchDownload({
-        fileList,
-        headers,
-        zipName
-      })
     },
 
     reSaveToServer(urls, mzi) {
