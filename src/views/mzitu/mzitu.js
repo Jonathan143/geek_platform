@@ -10,7 +10,7 @@ export default {
         index: 1,
         total: 0
       },
-      isDownloadModule: true
+      isDownloadModule: false
     }
   },
 
@@ -31,9 +31,10 @@ export default {
         this.isDownloading = true
         reFetchAlbumUrls(sourceUrl).then(({ srcList }) => {
           this.$message.success('开始下载...')
-          this.isDownloadModule
-            ? this.batchDownload(srcList, mzi.title)
-            : this.reSaveToServer(srcList, mzi)
+          // this.isDownloadModule
+          //   ? this.batchDownload(srcList, mzi.title)
+          //   : this.reSaveToServer(srcList, mzi)
+          this.reSaveToServer(srcList, mzi)
         })
       }
     },
@@ -45,7 +46,6 @@ export default {
     batchDownload(srcList, zipName) {
       const fileList = srcList.map(item => item.imageUrl)
       const headers = srcList.map(item => item.pageUrl)
-      debugger
       this.handleBatchDownload({
         fileList,
         headers,
