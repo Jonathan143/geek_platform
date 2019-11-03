@@ -9,8 +9,7 @@ export default {
       page: {
         index: 1,
         total: 0
-      },
-      isDownloadModule: false
+      }
     }
   },
 
@@ -25,19 +24,30 @@ export default {
 
     onRightTopIconClick(mzi) {
       const { sourceUrl, isDownload, children, title } = mzi
+      const messageText = isDownload ? '下载' : '上传服务器'
+
       if (this.isDownloading) {
-        this.$message.success('正在下载中...')
+        this.$notify.success(`正在${messageText}中...`)
       } else {
         this.isDownloading = true
-        this.$message.success('开始下载...')
-        isDownload
-          ? this.handleBatchDownload({
-              fileList: children,
-              zipName: title
-            })
-          : reFetchAlbumUrls(sourceUrl).then(({ srcList }) => {
-              this.reSaveToServer(srcList, mzi)
-            })
+        this.$notify.success(`开始${messageText}...`)
+        try {
+          isDownload
+            ? this.handleBatchDownload({
+                fileList: children,
+                zipName: title,
+                zipSuccess: () => {
+                  this.isDownloading = false
+                  this.$notify.success(`${title}打包zip成功`)
+                }
+              })
+            : reFetchAlbumUrls(sourceUrl).then(({ srcList }) => {
+                this.reSaveToServer(srcList, mzi)
+              })
+        } catch (error) {
+          this.$notify.error(`${messageText}失败咯`)
+          this.isDownloading = false
+        }
       }
     },
 
@@ -47,17 +57,12 @@ export default {
 
     reSaveToServer(urls, mzi) {
       const { title, date } = mzi
-      reSaveMzituAlbum(urls, title, date)
-        .then(data => {
-          this.isDownloading = false
-          mzi.isDownload = true
-          mzi.children = data
-          this.$message.success('下载成功')
-        })
-        .catch(() => {
-          this.$message.error('下载失败咯')
-          this.isDownloading = false
-        })
+      reSaveMzituAlbum(urls, title, date).then(data => {
+        mzi.isDownload = true
+        mzi.children = data
+        this.isDownloading = false
+        this.$notify.success('上传服务器成功')
+      })
     }
   }
 }

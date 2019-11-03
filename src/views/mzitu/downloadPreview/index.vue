@@ -11,9 +11,12 @@
         </el-option>
       </el-select>
 
-      <el-switch v-model="isDownloadModule"
-        active-text="下载本地"
-        inactive-text="上传服务器" />
+      <el-input placeholder="搜索妹子"
+        prefix-icon="el-icon-search"
+        v-model="searchMzitu"
+        clearable
+        @keydown.enter.native="onDataSourceChange">
+      </el-input>
     </template>
 
     <card-view v-model="isLoading"
@@ -112,8 +115,8 @@ export default {
         if (mziList.length) {
           this.mzituList = [...this.mzituList, ...mziList]
           this.page.index++
-          this.page.total = total
         }
+        this.page.total = total
         this.isLoading = false
       })
     }

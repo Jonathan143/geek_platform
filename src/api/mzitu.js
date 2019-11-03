@@ -16,6 +16,16 @@ export function reSaveMzituAlbum(urls, title, date) {
   })
 }
 
+// 服务器从妹子图网获取图片打包后返回数据流下载
+export function reFetchDownloadMzituPackage(fileList) {
+  return $axios({
+    method: 'post',
+    api: 'mzitu/download_package',
+    param: { fileList },
+    config: { responseType: 'blob' }
+  })
+}
+
 export function reFetchMzituCategoryList() {
   return $axios({
     api: 'mzitu/get_category_list',
