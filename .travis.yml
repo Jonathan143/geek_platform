@@ -7,7 +7,7 @@ cache:
 
 branches:
   only:
-    - master
+    - master__js
 
 script:
   - yarn run build:travis
