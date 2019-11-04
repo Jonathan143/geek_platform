@@ -51,13 +51,14 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // 在请求发送之前做一些处理
-    const token = util.cookies.get('token')
-    config.headers.authorization = token
+    if (!config.url.includes('http')) {
+      const token = util.cookies.get('token')
+      config.headers.authorization = token
+    }
     return config
   },
   error => {
     // 发送失败
-    console.log(error)
     return Promise.reject(error)
   }
 )
@@ -97,10 +98,13 @@ service.interceptors.response.use(
   }
 )
 
-export default ({ api, method = 'get', param, ...config }) => {
-  return service[method](
-    api,
-    method === 'get' ? { params: param, ...config } : param,
-    config
-  )
+export default ({ api, method = 'get', param, config }) => {
+  const params = {
+    url: api,
+    method,
+    ...config
+  }
+  const ginseng = method === 'get' ? 'params' : 'data'
+  params[ginseng] = param
+  return service(params)
 }

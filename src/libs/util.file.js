@@ -31,15 +31,19 @@ export function formatFileSize(size, index = 0) {
 
 export const getFile = ({ url, headers, onDownloadProgress }) => {
   return new Promise((resolve, reject) => {
-    const config = {
+    const params = {
       api: url,
-      responseType: 'arraybuffer',
-      timeout: 0
+      config: {
+        responseType: 'arraybuffer',
+        timeout: 0
+      }
     }
-    headers ? (config.headers = headers) : ''
-    onDownloadProgress ? (config.onDownloadProgress = onDownloadProgress) : ''
+    headers ? (params.config.headers = headers) : ''
+    onDownloadProgress
+      ? (params.config.onDownloadProgress = onDownloadProgress)
+      : ''
 
-    axios(config)
+    axios(params)
       .then(data => {
         resolve(data)
       })
@@ -73,9 +77,20 @@ export const handleBatchDownload = async ({
         const arr_name = item.split('/')
         let file_name = arr_name[arr_name.length - 1] // 获取文件名
 
-        zip.file(file_name, data, {
-          binary: true
-        }) // 逐个添加文件
+        zip.file(
+          file_name,
+          data,
+          {
+            binary: true,
+            compression: 'DEFLATE',
+            compressionOptions: {
+              level: 6
+            }
+          },
+          percent => {
+            console.log(percent)
+          }
+        ) // 逐个添加文件
         cache[file_name] = data
       }
     )

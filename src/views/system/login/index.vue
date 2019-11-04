@@ -17,6 +17,7 @@
 
 <script>
 import { REGISTERED } from '@/config.js'
+import { reFetchBingPic } from '@/api/login'
 export default {
   name: 'login',
 
@@ -38,7 +39,7 @@ export default {
     },
 
     logoSrc() {
-      return `https://img-1256555015.file.myqcloud.com/2019/08/06/${
+      return `https://yun.yang143.cn/2019/08/06/${
         this.isLogin ? '5d49915f5f6b5' : '5d49915f65107'
       }.png`
     },
@@ -54,10 +55,14 @@ export default {
         this.currentComponent = this.isLogin ? 'RegisterCard' : 'LoginCard'
       }
     },
-
+    // new Date().getTime()
     setAvatar(url) {
       this.avatar = url
     }
+  },
+
+  created() {
+    console.log(reFetchBingPic())
   }
 }
 </script>

@@ -16,5 +16,5 @@ else
 echo "发现 $publishPath 文件夹"
 fi
 echo '开始发布'
-cp -r dist/* $publishPath
+cp -r dist/ $publishPath
 echo '====== 发布完成 ====='

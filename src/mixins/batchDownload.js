@@ -39,6 +39,12 @@ export default {
         ...config,
         onDownloadProgress: this.onDownloadProgress()
       })
+    },
+
+    getPercentage(key) {
+      return (
+        Math.ceil((this.downloadSizes[key] / this.totalSizes[key]) * 100) || 0
+      )
     }
   }
 }
