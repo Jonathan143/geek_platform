@@ -8,6 +8,7 @@ export function reFetchAlbumUrls(url) {
   })
 }
 
+// 下载整套图片
 export function reSaveMzituAlbum(urls, title, date) {
   return $axios({
     method: 'post',
@@ -26,6 +27,7 @@ export function reFetchDownloadMzituPackage(fileList) {
   })
 }
 
+// 获取妹子分类列表
 export function reFetchMzituCategoryList() {
   return $axios({
     api: 'mzitu/get_category_list',
@@ -33,6 +35,7 @@ export function reFetchMzituCategoryList() {
   })
 }
 
+// 搜索
 export function reFetchMzitu({ type, content, page }) {
   return $axios({
     api: 'mzitu',
@@ -44,6 +47,7 @@ export function reFetchMzitu({ type, content, page }) {
   })
 }
 
+// 获取已缓存封面的妹子
 export function reFetchMzituFromDataBase({
   nameLike,
   id,

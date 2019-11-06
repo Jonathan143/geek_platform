@@ -1,8 +1,17 @@
 import layoutHeaderAside from '@/layout/header-aside'
-import fileRouter from './modules/file'
-import mzituRouter from './modules/mzitu'
-import reptileRouter from './modules/reptile'
-import userRouter from './modules/user'
+
+// 路由扫描自动注册
+const routesContext = require.context('./modules', true, /\.js$/)
+let routes = []
+routesContext.keys().forEach(router => {
+  const routerConfig = routesContext(router)
+  /**
+   * 兼容 import export 和 require module.export 两种规范
+   */
+  const ctrl = routerConfig.default || routerConfig
+
+  routes.push(ctrl)
+})
 
 // 由于懒加载页面太多的话会造成webpack热更新太慢，所以开发环境不使用懒加载，只有生产环境使用懒加载
 const _import = require('@/libs/util.import.' + process.env.NODE_ENV)
@@ -52,10 +61,7 @@ const frameIn = [
       }
     ]
   },
-  mzituRouter,
-  fileRouter,
-  reptileRouter,
-  userRouter
+  ...routes
 ]
 
 /**

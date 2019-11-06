@@ -4,7 +4,7 @@ import { Notification } from 'element-ui'
 import util from '@/libs/util'
 import router from '@/router'
 
-// 创建一个错误
+// 跳转至登录页
 function toLogin() {
   util.cookies.remove('token')
   const { name, fullPath } = router.currentRoute

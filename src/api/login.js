@@ -1,5 +1,6 @@
 import $axios from '@/plugin/axios'
 
+// 登录
 export function reSaveLogin({ username, password }) {
   return $axios({
     method: 'post',
@@ -11,6 +12,7 @@ export function reSaveLogin({ username, password }) {
   })
 }
 
+// 注册
 export function reSaveRegister(param) {
   return $axios({
     api: 'user/register',
@@ -19,30 +21,18 @@ export function reSaveRegister(param) {
   })
 }
 
+// 获取Github用户信息
 export function reFetchUserGithubInfo(username) {
   return $axios({
     api: `https://api.github.com/users/${username}`
   })
 }
 
+// 获取bing每日图片
 export async function reFetchBingPic(username) {
   const data = await $axios({
-    api: 'https://cn.bing.com/HPImageArchive.aspx',
-    param: {
-      format: 'js',
-      idx: 0,
-      n: 1,
-      nc: 1572861028125,
-      pid: 'hp',
-      video: 1
-    }
+    api: 'other/bing'
   })
 
-  const { url, enddate, startdate, copyright } = data.images
-  return {
-    url: `https://cn.bing.com/${url}`,
-    enddate,
-    startdate,
-    title: copyright
-  }
+  return data
 }

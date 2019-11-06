@@ -1,6 +1,8 @@
 <template>
-  <div id="login">
-    <div class="auth-wrapper">
+  <div id="login"
+    :style="bingBackground">
+    <div class="auth-wrapper"
+      :style="bingBackground">
       <el-avatar class="logo"
         :size="120"
         :src="avatar||logoSrc"
@@ -29,7 +31,8 @@ export default {
   data() {
     return {
       currentComponent: 'LoginCard',
-      avatar: ''
+      avatar: '',
+      bing: ''
     }
   },
 
@@ -46,6 +49,10 @@ export default {
 
     logoText() {
       return (this.isLogin ? 'Enter' : 'Register') + ' Now!'
+    },
+
+    bingBackground() {
+      return { background: `url('${this.bing.url}') no-repeat center` }
     }
   },
 
@@ -61,8 +68,8 @@ export default {
     }
   },
 
-  created() {
-    console.log(reFetchBingPic())
+  async created() {
+    this.bing = await reFetchBingPic()
   }
 }
 </script>
@@ -71,7 +78,6 @@ export default {
 #login {
   width: 100%;
   height: 100%;
-  background: url('https://api.i-meto.com/bing?new') no-repeat center;
   background-size: cover;
   display: flex;
   justify-content: center;
@@ -95,7 +101,7 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('https://api.i-meto.com/bing?new') no-repeat center;
+    background: inherit;
     background-size: cover;
     background-attachment: fixed;
     filter: blur(20px);
