@@ -99,6 +99,10 @@ service.interceptors.response.use(
 )
 
 export default ({ api, method = 'get', param, config }) => {
+  if (api.startsWith('MUSIC_API/')) {
+    api.replace('MUSIC_API/', process.env.NETEASE_CLOUD_MUSIC_API)
+  }
+
   const params = {
     url: api,
     method,
