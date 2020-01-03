@@ -52,7 +52,7 @@ export default {
     },
 
     bingBackground() {
-      return { background: `url('${this.bing.url}') no-repeat center` }
+      return { backgroundImage: `url('${this.bing.url}')` }
     }
   },
 
@@ -79,6 +79,7 @@ export default {
   width: 100%;
   height: 100%;
   background-size: cover;
+  background-repeat: no-repeat;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -101,7 +102,8 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    background: inherit;
+    background-image: inherit;
+    background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
     filter: blur(20px);

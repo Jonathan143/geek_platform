@@ -7,3 +7,17 @@ export function reFetchFileList(path) {
     param: { path }
   })
 }
+
+// 获取存储桶列表
+export function reFetchBucketList(path) {
+  return $axios({
+    api: 'cos/bucket'
+  })
+}
+
+// 获取cos临时密钥
+export function reFetchCosCredential(path) {
+  return $axios({
+    api: 'cos/credential'
+  })
+}

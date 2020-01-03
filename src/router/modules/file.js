@@ -17,6 +17,12 @@ export default {
       name: `${pre}Index`,
       component: _import('file'),
       meta: { ...meta, title: '文件', cache: true }
+    },
+    {
+      path: 'cos',
+      name: `${pre}Cos`,
+      component: _import('file/cos'),
+      meta: { ...meta, title: '对象存储' }
     }
   ])('file')
 }
