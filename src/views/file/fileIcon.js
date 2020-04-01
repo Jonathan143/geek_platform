@@ -37,5 +37,7 @@ export default {
   _pdf: ['pdf'],
   _rtf: ['rtf'],
   _md: ['md'],
-  _Vue: ['vue']
+  _Vue: ['vue'],
+  _html: ['html', 'htm'],
+  _apk: ['apk']
 }
