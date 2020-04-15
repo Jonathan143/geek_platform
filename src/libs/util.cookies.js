@@ -11,6 +11,7 @@ const cookies = {}
 cookies.set = function(name = 'default', value = '', cookieSetting = {}) {
   let currentCookieSetting = {
     expires: 5,
+    domain: process.env.NODE_ENV === 'development' ? '' : 'yang143.cn',
     sameSite: 'lax'
   }
   Object.assign(currentCookieSetting, cookieSetting)
