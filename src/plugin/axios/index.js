@@ -44,6 +44,7 @@ function errorLog(error, message) {
 // 创建一个 axios 实例
 const service = axios.create({
   baseURL: process.env.VUE_APP_API,
+  withCredentials: true,
   timeout: 60 * 1000 // 请求超时时间
 })
 
@@ -51,10 +52,10 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // 在请求发送之前做一些处理
-    if (!config.url.includes('http')) {
-      const token = util.cookies.get('token')
-      config.headers.authorization = token
-    }
+    // if (!config.url.includes('http')) {
+    //   const token = util.cookies.get('token')
+    //   config.headers.authorization = token
+    // }
     return config
   },
   error => {

@@ -14,11 +14,7 @@ cookies.set = function(name = 'default', value = '', cookieSetting = {}) {
     sameSite: 'lax'
   }
   Object.assign(currentCookieSetting, cookieSetting)
-  Cookies.set(
-    `geekadmin-${process.env.VUE_APP_VERSION}-${name}`,
-    value,
-    currentCookieSetting
-  )
+  Cookies.set(`geekadmin-${name}`, value, currentCookieSetting)
 }
 
 /**
@@ -26,7 +22,7 @@ cookies.set = function(name = 'default', value = '', cookieSetting = {}) {
  * @param {String} name cookie name
  */
 cookies.get = function(name = 'default') {
-  return Cookies.get(`geekadmin-${process.env.VUE_APP_VERSION}-${name}`)
+  return Cookies.get(`geekadmin-${name}`)
 }
 
 /**
@@ -41,7 +37,7 @@ cookies.getAll = function() {
  * @param {String} name cookie name
  */
 cookies.remove = function(name = 'default') {
-  return Cookies.remove(`geekadmin-${process.env.VUE_APP_VERSION}-${name}`)
+  return Cookies.remove(`geekadmin-${name}`)
 }
 
 export default cookies

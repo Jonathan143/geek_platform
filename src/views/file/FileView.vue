@@ -83,7 +83,8 @@
           :indeterminate="isAllIndeterminate"
           @change="onAllCheckedChange"></el-checkbox>
         <span v-if="gridSelectedList.length"
-          class="grid-header__count">（已选择 {{ gridSelectedList.length }} 项）</span>
+          class="grid-header__count">（已选择 {{ gridSelectedList.length }}
+          项）</span>
       </div>
       <div class="grid">
         <div class="grid__file-wrapper"

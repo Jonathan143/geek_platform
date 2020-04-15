@@ -12,7 +12,13 @@ import router from './router'
 import { frameInRoutes } from '@/router/routes'
 import '@/filter'
 import formCreate, { maker } from '@form-create/element-ui'
+import './directive'
+import axios from '@/plugin/axios'
+Vue.prototype.$callApi = axios
 
+// import Vuesax from 'vuesax'
+// import 'vuesax/dist/vuesax.css'
+// Vue.use(Vuesax)
 // 核心插件
 Vue.use(d2Admin)
 Vue.use(formCreate)
