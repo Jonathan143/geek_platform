@@ -1,7 +1,7 @@
 import $axios from '@/plugin/axios'
 
 // 拉取
-export function pullUnDraw(pageIndex) {
+export function pullUnDraw(pageIndex = '') {
   return $axios({
     api: `other/draw/pull/${pageIndex}`
   })
