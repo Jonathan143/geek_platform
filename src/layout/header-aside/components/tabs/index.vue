@@ -7,7 +7,8 @@
         <d2-contextmenu :visible.sync="contextmenuFlag"
           :x="contentmenuX"
           :y="contentmenuY">
-          <d2-contextmenu-list :menulist="tagName === '/index' ? contextmenuListIndex : contextmenuList"
+          <d2-contextmenu-list
+            :menulist="tagName === '/index' ? contextmenuListIndex : contextmenuList"
             @rowClick="contextmenuClick" />
         </d2-contextmenu>
         <el-tabs class="d2-multiple-page-control"

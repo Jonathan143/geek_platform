@@ -1,0 +1,158 @@
+@import './variable.scss';
+@import './base-size.scss';
+
+//gen color background-color
+@each $colorTypeKey, $colorTypeValue in $color-type {
+  @each $colorKey, $colorValue in $color {
+    .#{ $colorTypeKey }-#{ $colorKey } {
+      #{ $colorTypeValue }: $colorValue;
+    }
+  }
+}
+
+//gen padding margin my
+@each $typeKey, $typeValue in $spacing-type {
+  //mt-num
+  @each $directionKey, $directionValue in $spacing-direction {
+    @each $sizeValue in $spacing-size {
+      .#{ $typeKey }#{ $directionKey }-#{ $sizeValue } {
+        #{ $typeValue }-#{ $directionValue }: $sizeValue * $base-spacing-size;
+      }
+    }
+  }
+
+  //mx-num my-num
+  @each $sizeValue in $spacing-size {
+    .#{ $typeKey }x-#{ $sizeValue } {
+      #{ $typeValue }-left: $sizeValue * $base-spacing-size;
+      #{ $typeValue }-right: $sizeValue * $base-spacing-size;
+    }
+    .#{ $typeKey }y-#{ $sizeValue } {
+      #{ $typeValue }-top: $sizeValue * $base-spacing-size;
+      #{ $typeValue }-bottom: $sizeValue * $base-spacing-size;
+    }
+  }
+
+  //m-num
+  @each $sizeValue in $spacing-size {
+    .#{ $typeKey }-#{ $sizeValue } {
+      #{ $typeValue }: $sizeValue * $base-spacing-size;
+    }
+  }
+}
+
+//gen font-size
+@each $sizeValue in $text-size {
+  .text-#{ $sizeValue } {
+    font-size: $sizeValue * $base-font-size;
+  }
+}
+
+//gen font-weight
+@each $weightValue in $text-weight {
+  .font-weight-#{ $weightValue } {
+    font-weight: $weightValue;
+  }
+}
+
+//gen text-align
+@each $textLayoutValue in $text-layout {
+  .text-#{ $textLayoutValue } {
+    text-align: $textLayoutValue;
+  }
+}
+
+//gen display
+@each $displayValue in $d-value {
+  .d-#{ $displayValue } {
+    display: $displayValue;
+  }
+}
+
+//gen justify-content
+@each $jcKey, $jcValue in $jc-value {
+  .jc-#{ $jcKey } {
+    justify-content: $jcValue;
+  }
+}
+
+//gen align-items
+@each $aiKey, $aiValue in $ai-value {
+  .ai-#{ $aiKey } {
+    align-items: $aiValue;
+  }
+}
+
+//gen align-content
+@each $acKey, $acValue in $ac-value {
+  .ac-#{ $acKey } {
+    align-content: $acValue;
+  }
+}
+
+//gen flex-wrap
+@each $wrapKey, $wrapValue in $flex-wrap-value {
+  .flex-#{ $wrapKey } {
+    flex-wrap: $wrapValue;
+  }
+}
+
+//gen flex-grow flex-shrink
+@each $scaleTypeValue in $flex-item-scale-type {
+  @each $scaleSizeValue in $flex-item-scale-size {
+    .flex-#{ $scaleTypeValue }-#{ $scaleSizeValue } {
+      flex-#{ $scaleTypeValue }: $scaleSizeValue;
+    }
+  }
+}
+
+//gen position
+@each $positionValue in $position-value {
+  .pos-#{ $positionValue } {
+    position: $positionValue;
+  }
+}
+
+//gen top...
+@each $directionKey, $directionValue in $position-direction {
+  @each $sizeValue in $position-size {
+    .#{ $directionKey }-#{ $sizeValue } {
+      #{ $directionValue }: $sizeValue * $base-spacing-size;
+    }
+  }
+}
+
+//gen border
+@each $colorKey, $colorValue in $border-color {
+  @each $sizeValue in $border-size {
+    .border-#{ $colorKey }-#{ $sizeValue } {
+      border: $sizeValue * $base-border-size solid $colorValue;
+    }
+  }
+}
+
+//gen raduis
+@each $radiusValue in $border-radius {
+  .border-radius-#{ $radiusValue } {
+    border-radius: $radiusValue * $base-border-size;
+  }
+}
+
+//gen cursor
+@each $cursorValue in $cursor-value {
+  .cursor-#{ $cursorValue } {
+    cursor: $cursorValue;
+    //防止出现用户选择样式
+    user-select: none;
+  }
+}
+
+@for $i from 1 through 12 {
+  .w-#{ $i*100 } {
+    width: $i * 100px;
+  }
+}
+
+.w100 {
+  width: 100%;
+}

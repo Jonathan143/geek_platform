@@ -1,6 +1,7 @@
 <template>
   <i class="fa"
     :class="`fa-${name}`"
+    :style="style"
     aria-hidden="true"></i>
 </template>
 
@@ -13,6 +14,16 @@ export default {
       type: String,
       required: false,
       default: 'font-awesome'
+    },
+    color: {
+      type: String,
+      default: ''
+    }
+  },
+  computed: {
+    style() {
+      const color = this.color
+      return color ? { color } : {}
     }
   }
 }

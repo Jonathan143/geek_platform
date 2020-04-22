@@ -1,0 +1,106 @@
+//base 部分
+$base-direction: (
+  t: top,
+  r: right,
+  b: bottom,
+  l: left
+);
+
+/* prettier-ignore */
+$base-size: (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40);
+
+$base-color: (
+  primary: #46c37b,
+  black: black,
+  white: white,
+  gray: #666666,
+  blue: #2588ff,
+  lessblue: #e6f2ff,
+  lessprimary: #effdf5
+);
+
+//颜色相关
+$color-type: (
+  text: color,
+  bg: background-color
+);
+
+$color: $base-color;
+
+//边距相关 .mt-1 .pt-1
+$spacing-type: (
+  m: margin,
+  p: padding
+);
+
+$spacing-direction: $base-direction;
+
+$spacing-size: $base-size;
+
+//字体大小 .text-1
+$text-size: $base-size;
+
+//字体宽度 .text-weight-600
+$text-weight: (100, 200, 300, 400, 500, 600, 700, 800, 900);
+
+//文本布局 .text-center
+$text-layout: (left, center, right);
+
+//元素布局
+//.d-block .d-inline .d-inline-block
+//.d-flex
+//.jc-center .ai-center ac-center
+//.flex-wrap
+//.grow-1 .shrink-1
+$d-value: (flex, block, inline, inline-block, none);
+
+$jc-value: (
+  start: flex-start,
+  end: flex-end,
+  center: center,
+  between: space-between,
+  around: space-around
+);
+
+$ai-value: (
+  start: flex-start,
+  end: flex-end,
+  center: center,
+  baseline: baseline,
+  stretch: stretch
+);
+
+$ac-value: (
+  start: flex-start,
+  end: flex-end,
+  center: center,
+  between: space-between,
+  around: space-around,
+  stretch: stretch
+);
+
+$flex-wrap-value: (
+  nowrap: nowrap,
+  wrap: wrap,
+  reverse: wrap-reverse
+);
+
+$flex-item-scale-type: (grow, shrink);
+
+$flex-item-scale-size: (0, 1, 2, 3, 4, 5);
+
+$position-value: (relative, absolute, fixed);
+
+$position-direction: $base-direction;
+
+$position-size: $base-size;
+
+//边框 border-color-num
+$border-size: (1, 2, 3, 4, 5);
+$border-color: $base-color;
+
+//圆角 radius
+$border-radius: $base-size;
+
+//光标显示 cursor
+$cursor-value: (pointer, grab, grabbing);

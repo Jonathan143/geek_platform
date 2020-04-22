@@ -23,27 +23,36 @@
       :style="{color}"><i class="el-icon-loading" />加载中...</p>
     <p class="loading"
       v-if="isNoMore&&!isLoading">没有更多了</p>
+
+    <draw-dialog v-model="isDrawDialogVisible"
+      :data="svgDialogData"></draw-dialog>
   </d2-container>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import { fetchUnDraw } from '@/api/unDraw'
-import { download } from '@/libs/util.file'
+import { changeColor } from './utils'
+import drawDialog from '../components/drawDialog'
 export default {
   name: 'pictureUnDraw',
-  components: {},
+  components: { drawDialog },
   props: {},
   data() {
     return {
       list: [],
       params: {
         pageIndex: 1,
-        pageSize: 10,
+        pageSize: 20,
         nameLike: ''
       },
       total: 0,
-      isLoading: false
+      isLoading: false,
+      isDrawDialogVisible: false,
+      svgDialogData: {
+        title: '',
+        svgHtml: ''
+      }
     }
   },
   computed: {
@@ -63,22 +72,19 @@ export default {
         '#illustration .illustration-item__svg'
       )
       for (const svg of svgList) {
-        this.changeColor(val, oldValue, svg)
+        changeColor(val, oldValue, svg)
       }
     }
   },
   methods: {
     onDownloadClick(index, { title }) {
-      const ref = this.$refs.illustration[index]
-      if (ref && ref.children) {
-      }
-      const blobUrl = URL.createObjectURL(
-        new Blob([this.$refs.illustration[index].children[0].outerHTML], {
-          type: 'image/svg+xml'
-        })
-      )
+      this.isDrawDialogVisible = true
 
-      download(blobUrl, title + '.svg')
+      const ref = this.$refs.illustration[index]
+      this.svgDialogData = {
+        svgHtml: ref.children[0].outerHTML,
+        title
+      }
     },
 
     async load() {
@@ -96,17 +102,7 @@ export default {
     },
 
     initialization(svg) {
-      this.changeColor(this.color, '#6c63ff', svg)
-    },
-
-    changeColor(color, oldColor, svg) {
-      if (svg && svg.children) {
-        for (const el of svg.children) {
-          if (el.getAttribute('fill') === oldColor) {
-            el.setAttribute('fill', color)
-          }
-        }
-      }
+      changeColor(this.color, '#6c63ff', svg)
     },
 
     keepData() {
