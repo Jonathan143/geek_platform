@@ -21,7 +21,7 @@
         :key="item.id">
         <div class="illustration-item__svg-wrap d2-pt d2-pb"
           ref="illustration"
-          @click="onDownloadClick(index,item)">
+          @click="onPreviewClick(index,item)">
           <div class="illustration-item__svg"
             :initialization="initialization"
             v-svg="item.image">
@@ -148,8 +148,9 @@ export default {
       this.isPulling = false
     },
 
-    onDownloadClick(index, { title }) {
+    onPreviewClick(index, { title }) {
       this.isDrawDialogVisible = true
+      console.log(index)
 
       const ref = this.$refs.illustration[index]
       this.svgDialogData = {
