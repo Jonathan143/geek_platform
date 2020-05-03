@@ -5,6 +5,7 @@
     @close="$emit('input',false)">
     <div class="d-flex">
       <div class="draw-dialog__svg"
+        v-if="isSVGVisible"
         v-html="data.svgHtml"></div>
       <div>
         <p class="draw-dialog__title">{{data.title}}</p>
@@ -52,7 +53,8 @@ export default {
     return {
       colorPicker: '',
       historyColor: '',
-      throttle: null
+      throttle: null,
+      isSVGVisible: true
     }
   },
   computed: {
@@ -71,6 +73,7 @@ export default {
     data() {
       this.colorPicker = this.color
       this.historyColor = this.color
+      this.reloadSVG()
     }
   },
   methods: {
@@ -84,6 +87,13 @@ export default {
         document.querySelector('.draw-dialog__svg > .illustration-item__svg'),
         this.data.title
       )
+    },
+
+    reloadSVG() {
+      this.isSVGVisible = false
+      this.$nextTick(_ => {
+        this.isSVGVisible = true
+      })
     }
   },
   mounted() {
