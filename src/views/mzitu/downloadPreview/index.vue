@@ -17,6 +17,11 @@
         clearable
         @keydown.enter.native="onDataSourceChange">
       </el-input>
+
+      <el-button icon="el-icon-refresh-left"
+        :loading="isLoading"
+        circle
+        @click="onDataSourceChange" />
     </template>
 
     <card-view v-model="isLoading"
