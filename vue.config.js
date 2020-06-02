@@ -1,5 +1,5 @@
 const VueFilenameInjector = require('@d2-projects/vue-filename-injector')
-
+const CompressionPlugin = require('compression-webpack-plugin')
 const ThemeColorReplacer = require('webpack-theme-color-replacer')
 const forElementUI = require('webpack-theme-color-replacer/forElementUI')
 
@@ -101,6 +101,20 @@ module.exports = {
       fallbackLocale: 'en',
       localeDir: 'locales',
       enableInSFC: true
+    }
+  },
+  // gzip
+  configureWebpack: config => {
+    if (process.env.NODE_ENV === 'production') {
+      return {
+        plugins: [
+          new CompressionPlugin({
+            test: /\.js$|\.html$|.\css/, //匹配文件名
+            threshold: 10240, //对超过10k的数据压缩
+            deleteOriginalAssets: false //不删除源文件
+          })
+        ]
+      }
     }
   }
 }
