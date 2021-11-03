@@ -28,7 +28,7 @@
     "qs": "^6.7.0",
     "screenfull": "^4.2.0",
     "ua-parser-js": "^0.7.19",
-    "validator": "^13.0.0",
+    "validator": "^13.7.0",
     "vue": "^2.6.10",
     "vue-i18n": "^8.14.0",
     "vue-router": "^3.0.3",
